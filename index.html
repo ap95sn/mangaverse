@@ -1,8 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <meta
         name="description"
@@ -11,14 +17,20 @@
 
     <title>MangaVerse | Online Manga Reader</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
+
 
 <body>
 
     <!-- =========================
          NAVIGATION
     ========================== -->
+
     <header class="navbar">
 
         <div class="logo">
@@ -26,13 +38,19 @@
         </div>
 
         <nav class="nav-links">
-            <button onclick="showPage('home')">
+
+            <button
+                onclick="showPage('home')"
+            >
                 Home
             </button>
 
-            <button onclick="showPage('library')">
+            <button
+                onclick="showPage('library')"
+            >
                 Library
             </button>
+
         </nav>
 
         <button
@@ -49,7 +67,11 @@
     <!-- =========================
          HOME PAGE
     ========================== -->
-    <main id="homePage" class="page">
+
+    <main
+        id="homePage"
+        class="page"
+    >
 
         <section class="hero">
 
@@ -83,11 +105,13 @@
 
 
         <!-- Popular Manga -->
+
         <section class="section">
 
             <div class="section-title">
 
                 <div>
+
                     <p class="section-label">
                         DISCOVER
                     </p>
@@ -95,6 +119,7 @@
                     <h2>
                         Popular Manga
                     </h2>
+
                 </div>
 
                 <button
@@ -110,16 +135,19 @@
             <div class="manga-grid">
 
                 <!-- Shadow Eclipse -->
+
                 <article
                     class="manga-card"
                     onclick="openManga('Shadow Eclipse')"
                 >
 
                     <div class="cover">
+
                         <img
                             src="images/shadow-eclipse.JPG"
                             alt="Shadow Eclipse manga cover"
                         >
+
                     </div>
 
                     <div class="card-info">
@@ -138,16 +166,19 @@
 
 
                 <!-- Neon Hearts -->
+
                 <article
                     class="manga-card"
                     onclick="openManga('Neon Hearts')"
                 >
 
                     <div class="cover">
+
                         <img
                             src="images/neon-hearts.JPG"
                             alt="Neon Hearts manga cover"
                         >
+
                     </div>
 
                     <div class="card-info">
@@ -166,16 +197,19 @@
 
 
                 <!-- Crimson Blade -->
+
                 <article
                     class="manga-card"
                     onclick="openManga('Crimson Blade')"
                 >
 
                     <div class="cover">
+
                         <img
                             src="images/crimson-blade.JPG"
                             alt="Crimson Blade manga cover"
                         >
+
                     </div>
 
                     <div class="card-info">
@@ -194,16 +228,19 @@
 
 
                 <!-- Beyond Tomorrow -->
+
                 <article
                     class="manga-card"
                     onclick="openManga('Beyond Tomorrow')"
                 >
 
                     <div class="cover">
+
                         <img
                             src="images/beyond-tomorrow.JPG"
                             alt="Beyond Tomorrow manga cover"
                         >
+
                     </div>
 
                     <div class="card-info">
@@ -230,6 +267,7 @@
     <!-- =========================
          LIBRARY PAGE
     ========================== -->
+
     <main
         id="libraryPage"
         class="page hidden"
@@ -268,6 +306,7 @@
             >
 
                 <!-- Shadow Eclipse -->
+
                 <article
                     class="manga-card searchable"
                     data-title="Shadow Eclipse"
@@ -275,10 +314,12 @@
                 >
 
                     <div class="cover">
+
                         <img
                             src="images/shadow-eclipse.JPG"
                             alt="Shadow Eclipse manga cover"
                         >
+
                     </div>
 
                     <div class="card-info">
@@ -297,6 +338,7 @@
 
 
                 <!-- Neon Hearts -->
+
                 <article
                     class="manga-card searchable"
                     data-title="Neon Hearts"
@@ -304,10 +346,12 @@
                 >
 
                     <div class="cover">
+
                         <img
                             src="images/neon-hearts.JPG"
                             alt="Neon Hearts manga cover"
                         >
+
                     </div>
 
                     <div class="card-info">
@@ -326,6 +370,7 @@
 
 
                 <!-- Crimson Blade -->
+
                 <article
                     class="manga-card searchable"
                     data-title="Crimson Blade"
@@ -333,10 +378,12 @@
                 >
 
                     <div class="cover">
+
                         <img
                             src="images/crimson-blade.JPG"
                             alt="Crimson Blade manga cover"
                         >
+
                     </div>
 
                     <div class="card-info">
@@ -355,6 +402,7 @@
 
 
                 <!-- Beyond Tomorrow -->
+
                 <article
                     class="manga-card searchable"
                     data-title="Beyond Tomorrow"
@@ -362,10 +410,12 @@
                 >
 
                     <div class="cover">
+
                         <img
                             src="images/beyond-tomorrow.JPG"
                             alt="Beyond Tomorrow manga cover"
                         >
+
                     </div>
 
                     <div class="card-info">
@@ -392,6 +442,7 @@
     <!-- =========================
          MANGA DETAIL PAGE
     ========================== -->
+
     <main
         id="detailPage"
         class="page hidden"
@@ -457,7 +508,9 @@
 
                 <div class="chapter-list">
 
-                    <button onclick="openReader(1)">
+                    <button
+                        onclick="openReader(1)"
+                    >
 
                         <span>
                             Chapter 1
@@ -470,7 +523,9 @@
                     </button>
 
 
-                    <button onclick="openReader(2)">
+                    <button
+                        onclick="openReader(2)"
+                    >
 
                         <span>
                             Chapter 2
@@ -483,7 +538,9 @@
                     </button>
 
 
-                    <button onclick="openReader(3)">
+                    <button
+                        onclick="openReader(3)"
+                    >
 
                         <span>
                             Chapter 3
@@ -515,6 +572,7 @@
     <!-- =========================
          READER PAGE
     ========================== -->
+
     <main
         id="readerPage"
         class="page hidden"
@@ -547,6 +605,7 @@
 
 
             <!-- Manga Pages -->
+
             <div class="manga-page">
 
                 <div class="fake-panel">
@@ -620,13 +679,18 @@
 
 
             <!-- Reader Controls -->
+
             <div class="reader-controls">
 
-                <button onclick="previousChapter()">
+                <button
+                    onclick="previousChapter()"
+                >
                     ← Previous
                 </button>
 
-                <button onclick="nextChapter()">
+                <button
+                    onclick="nextChapter()"
+                >
                     Next →
                 </button>
 
@@ -640,11 +704,13 @@
     <!-- =========================
          FOOTER
     ========================== -->
+
     <footer class="footer">
 
         <div class="footer-content">
 
             <div>
+
                 <strong>
                     MangaVerse
                 </strong>
@@ -652,6 +718,7 @@
                 <p>
                     A simple online manga reader project.
                 </p>
+
             </div>
 
             <p>
@@ -664,7 +731,9 @@
 
 
     <!-- JavaScript -->
-    <script src="script.js"></script>
+
+    <script src="script.js?v=2"></script>
 
 </body>
+
 </html>
