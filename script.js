@@ -1,5 +1,5 @@
 // ========================================
-// MangaVerse - Main JavaScript
+// MangaVerse - JavaScript
 // ========================================
 
 // ----------------------------------------
@@ -7,7 +7,8 @@
 // ----------------------------------------
 
 const mangaData = {
-    shadow: {
+    "Shadow Eclipse": {
+        id: "shadow",
         title: "Shadow Eclipse",
         genre: "Action · Fantasy",
         description:
@@ -16,7 +17,8 @@ const mangaData = {
         coverText: "SHADOW ECLIPSE"
     },
 
-    neon: {
+    "Neon Hearts": {
+        id: "neon",
         title: "Neon Hearts",
         genre: "Romance · Drama",
         description:
@@ -25,7 +27,8 @@ const mangaData = {
         coverText: "NEON HEARTS"
     },
 
-    crimson: {
+    "Crimson Blade": {
+        id: "crimson",
         title: "Crimson Blade",
         genre: "Action · Adventure",
         description:
@@ -34,7 +37,8 @@ const mangaData = {
         coverText: "CRIMSON BLADE"
     },
 
-    tomorrow: {
+    "Beyond Tomorrow": {
+        id: "tomorrow",
         title: "Beyond Tomorrow",
         genre: "Slice of Life · Drama",
         description:
@@ -46,10 +50,10 @@ const mangaData = {
 
 
 // ----------------------------------------
-// Current Reader State
+// Reader State
 // ----------------------------------------
 
-let currentManga = "shadow";
+let currentManga = "Shadow Eclipse";
 let currentChapter = 1;
 
 
@@ -58,13 +62,15 @@ let currentChapter = 1;
 // ----------------------------------------
 
 function showPage(pageName) {
+
     const pages = document.querySelectorAll(".page");
 
     pages.forEach(function(page) {
         page.classList.remove("active");
     });
 
-    const targetPage = document.getElementById(pageName + "Page");
+    const targetPage =
+        document.getElementById(pageName + "Page");
 
     if (targetPage) {
         targetPage.classList.add("active");
@@ -78,52 +84,57 @@ function showPage(pageName) {
 
 
 // ----------------------------------------
-// Open Manga Detail
+// Open Manga
 // ----------------------------------------
 
-function openManga(mangaId) {
-    const manga = mangaData[mangaId];
+function openManga(mangaName) {
+
+    const manga = mangaData[mangaName];
 
     if (!manga) {
+        console.log("Manga not found:", mangaName);
         return;
     }
 
-    currentManga = mangaId;
+    currentManga = mangaName;
     currentChapter = 1;
 
-    // Update title
-    const detailTitle = document.getElementById("detailTitle");
+    const detailTitle =
+        document.getElementById("detailTitle");
 
     if (detailTitle) {
         detailTitle.textContent = manga.title;
     }
 
-    // Update genre
-    const detailGenre = document.getElementById("detailGenre");
+    const detailGenre =
+        document.getElementById("detailGenre");
 
     if (detailGenre) {
         detailGenre.textContent = manga.genre;
     }
 
-    // Update description
-    const detailDescription = document.getElementById("detailDescription");
+    const detailDescription =
+        document.getElementById("detailDescription");
 
     if (detailDescription) {
-        detailDescription.textContent = manga.description;
+        detailDescription.textContent =
+            manga.description;
     }
 
-    // Update cover
-    const detailCover = document.getElementById("detailCover");
+    const detailCover =
+        document.getElementById("detailCover");
 
     if (detailCover) {
-        detailCover.className = "detail-cover " + manga.coverClass;
+        detailCover.className =
+            "detail-cover " + manga.coverClass;
     }
 
-    // Update cover text
-    const detailCoverText = document.getElementById("detailCoverText");
+    const detailCoverText =
+        document.getElementById("detailCoverText");
 
     if (detailCoverText) {
-        detailCoverText.textContent = manga.coverText;
+        detailCoverText.textContent =
+            manga.coverText;
     }
 
     showPage("detail");
@@ -135,6 +146,7 @@ function openManga(mangaId) {
 // ----------------------------------------
 
 function openReader(chapterNumber) {
+
     currentChapter = chapterNumber;
 
     const manga = mangaData[currentManga];
@@ -143,11 +155,14 @@ function openReader(chapterNumber) {
         return;
     }
 
-    const readerTitle = document.getElementById("readerTitle");
+    const readerTitle =
+        document.getElementById("readerTitle");
 
     if (readerTitle) {
         readerTitle.textContent =
-            manga.title + " — Chapter " + currentChapter;
+            manga.title +
+            " — Chapter " +
+            currentChapter;
     }
 
     updateReaderContent();
@@ -157,45 +172,48 @@ function openReader(chapterNumber) {
 
 
 // ----------------------------------------
-// Update Reader Content
+// Reader Content
 // ----------------------------------------
 
 function updateReaderContent() {
+
     const manga = mangaData[currentManga];
 
     if (!manga) {
         return;
     }
 
-    const readerContent = document.getElementById("readerContent");
+    const readerContent =
+        document.getElementById("readerContent");
 
     if (!readerContent) {
         return;
     }
 
-    const chapterStories = {
-        shadow: [
+    const stories = {
+
+        "Shadow Eclipse": [
             "The night was silent as a strange shadow appeared beneath the old tower.",
             "Kai raised his hand and watched the darkness move independently from his body.",
             "A mysterious voice whispered from the shadows, warning him that the eclipse was coming.",
             "For the first time, Kai realized that the power he feared might also be the only thing capable of protecting his city."
         ],
 
-        neon: [
+        "Neon Hearts": [
             "The city lights reflected across the rainy streets as Mia waited beneath a glowing sign.",
             "A familiar voice called her name, and she turned to see someone she had not expected to meet.",
             "They walked through the neon streets together, talking about dreams they had never told anyone else.",
             "Neither of them knew where the night would lead, but somehow the silence between them felt comfortable."
         ],
 
-        crimson: [
+        "Crimson Blade": [
             "The old road stretched toward the mountains while the crimson blade rested quietly at his side.",
             "A distant sound of steel echoed through the forest, forcing the swordsman to stop.",
             "He discovered a symbol carved into a tree — the same symbol that had appeared before the war.",
             "The truth he had searched for was finally beginning to reveal itself."
         ],
 
-        tomorrow: [
+        "Beyond Tomorrow": [
             "The morning began like any other, but today felt strangely different.",
             "After months of hesitation, Ren finally decided to take the first step toward his dream.",
             "His friends gathered around him, reminding him that growing up did not mean leaving everyone behind.",
@@ -203,34 +221,34 @@ function updateReaderContent() {
         ]
     };
 
-    const story = chapterStories[currentManga];
-
-    const chapterLabels = [
-        "Chapter Opening",
-        "A New Discovery",
-        "The Turning Point",
-        "To Be Continued..."
-    ];
+    const story = stories[currentManga];
 
     let html = "";
 
-    for (let i = 0; i < story.length; i++) {
+    story.forEach(function(text, index) {
+
         html += `
             <div class="manga-panel ${manga.coverClass}">
-                <span class="panel-number">${i + 1}</span>
+
+                <span class="panel-number">
+                    ${index + 1}
+                </span>
 
                 <div class="panel-content">
+
                     <div class="panel-title">
-                        ${chapterLabels[i]}
+                        Chapter ${currentChapter}
                     </div>
 
                     <p>
-                        ${story[i]}
+                        ${text}
                     </p>
+
                 </div>
+
             </div>
         `;
-    }
+    });
 
     readerContent.innerHTML = html;
 }
@@ -241,13 +259,24 @@ function updateReaderContent() {
 // ----------------------------------------
 
 function previousChapter() {
+
     if (currentChapter > 1) {
+
         currentChapter--;
+
         updateReaderTitle();
         updateReaderContent();
-        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
     } else {
-        alert("You are already reading Chapter 1.");
+
+        alert(
+            "You are already reading Chapter 1."
+        );
     }
 }
 
@@ -257,13 +286,24 @@ function previousChapter() {
 // ----------------------------------------
 
 function nextChapter() {
+
     if (currentChapter < 3) {
+
         currentChapter++;
+
         updateReaderTitle();
         updateReaderContent();
-        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
     } else {
-        alert("You have reached the latest chapter.");
+
+        alert(
+            "You have reached the latest chapter."
+        );
     }
 }
 
@@ -273,44 +313,61 @@ function nextChapter() {
 // ----------------------------------------
 
 function updateReaderTitle() {
+
     const manga = mangaData[currentManga];
 
     if (!manga) {
         return;
     }
 
-    const readerTitle = document.getElementById("readerTitle");
+    const readerTitle =
+        document.getElementById("readerTitle");
 
     if (readerTitle) {
+
         readerTitle.textContent =
-            manga.title + " — Chapter " + currentChapter;
+            manga.title +
+            " — Chapter " +
+            currentChapter;
     }
 }
 
 
 // ----------------------------------------
-// Search Manga
+// Search
 // ----------------------------------------
 
 function searchManga() {
-    const searchInput = document.getElementById("searchInput");
+
+    const searchInput =
+        document.getElementById("searchInput");
 
     if (!searchInput) {
         return;
     }
 
-    const searchText = searchInput.value.toLowerCase().trim();
+    const searchText =
+        searchInput.value
+        .toLowerCase()
+        .trim();
 
-    const cards = document.querySelectorAll("#libraryPage .manga-card");
+    const cards =
+        document.querySelectorAll(
+            "#libraryPage .manga-card"
+        );
 
     cards.forEach(function(card) {
-        const titleElement = card.querySelector("h3");
+
+        const titleElement =
+            card.querySelector("h3");
 
         if (!titleElement) {
             return;
         }
 
-        const title = titleElement.textContent.toLowerCase();
+        const title =
+            titleElement.textContent
+            .toLowerCase();
 
         if (title.includes(searchText)) {
             card.style.display = "";
@@ -322,70 +379,22 @@ function searchManga() {
 
 
 // ----------------------------------------
-// Theme Toggle
-// ----------------------------------------
-
-function toggleTheme() {
-    const root = document.documentElement;
-
-    const currentTheme =
-        root.getAttribute("data-theme") || "dark";
-
-    if (currentTheme === "dark") {
-        root.setAttribute("data-theme", "light");
-
-        root.style.setProperty("--bg", "#f5f5f7");
-        root.style.setProperty("--surface", "#ffffff");
-        root.style.setProperty("--card", "#ffffff");
-        root.style.setProperty("--card-hover", "#f0f0f2");
-        root.style.setProperty("--text", "#171717");
-        root.style.setProperty("--muted", "#666666");
-        root.style.setProperty("--border", "#dddddd");
-        root.style.setProperty("--shadow", "0 8px 25px rgba(0,0,0,0.08)");
-
-        updateThemeButton("☀");
-    } else {
-        root.setAttribute("data-theme", "dark");
-
-        root.style.setProperty("--bg", "#0f0f12");
-        root.style.setProperty("--surface", "#17171c");
-        root.style.setProperty("--card", "#1d1d24");
-        root.style.setProperty("--card-hover", "#25252e");
-        root.style.setProperty("--text", "#f5f5f5");
-        root.style.setProperty("--muted", "#a0a0aa");
-        root.style.setProperty("--border", "#303039");
-        root.style.setProperty("--shadow", "0 8px 25px rgba(0,0,0,0.25)");
-
-        updateThemeButton("☾");
-    }
-}
-
-
-// ----------------------------------------
-// Update Theme Button
-// ----------------------------------------
-
-function updateThemeButton(icon) {
-    const themeButton = document.getElementById("themeToggle");
-
-    if (themeButton) {
-        themeButton.textContent = icon;
-    }
-}
-
-
-// ----------------------------------------
 // Reset Search
 // ----------------------------------------
 
 function resetSearch() {
-    const searchInput = document.getElementById("searchInput");
+
+    const searchInput =
+        document.getElementById("searchInput");
 
     if (searchInput) {
         searchInput.value = "";
     }
 
-    const cards = document.querySelectorAll("#libraryPage .manga-card");
+    const cards =
+        document.querySelectorAll(
+            "#libraryPage .manga-card"
+        );
 
     cards.forEach(function(card) {
         card.style.display = "";
@@ -394,23 +403,163 @@ function resetSearch() {
 
 
 // ----------------------------------------
-// Initialize Website
+// Dark / Light Mode
 // ----------------------------------------
 
-document.addEventListener("DOMContentLoaded", function() {
+function toggleTheme() {
 
-    // Start with Home page
-    showPage("home");
+    const root =
+        document.documentElement;
 
-    // Search with Enter key
-    const searchInput = document.getElementById("searchInput");
+    const currentTheme =
+        root.getAttribute("data-theme") || "dark";
 
-    if (searchInput) {
-        searchInput.addEventListener("keydown", function(event) {
-            if (event.key === "Enter") {
-                searchManga();
-            }
-        });
+    if (currentTheme === "dark") {
+
+        root.setAttribute(
+            "data-theme",
+            "light"
+        );
+
+        root.style.setProperty(
+            "--bg",
+            "#f5f5f7"
+        );
+
+        root.style.setProperty(
+            "--surface",
+            "#ffffff"
+        );
+
+        root.style.setProperty(
+            "--card",
+            "#ffffff"
+        );
+
+        root.style.setProperty(
+            "--card-hover",
+            "#f0f0f2"
+        );
+
+        root.style.setProperty(
+            "--text",
+            "#171717"
+        );
+
+        root.style.setProperty(
+            "--muted",
+            "#666666"
+        );
+
+        root.style.setProperty(
+            "--border",
+            "#dddddd"
+        );
+
+        root.style.setProperty(
+            "--shadow",
+            "0 8px 25px rgba(0,0,0,0.08)"
+        );
+
+        updateThemeButton("☀");
+
+    } else {
+
+        root.setAttribute(
+            "data-theme",
+            "dark"
+        );
+
+        root.style.setProperty(
+            "--bg",
+            "#0f0f12"
+        );
+
+        root.style.setProperty(
+            "--surface",
+            "#17171c"
+        );
+
+        root.style.setProperty(
+            "--card",
+            "#1d1d24"
+        );
+
+        root.style.setProperty(
+            "--card-hover",
+            "#25252e"
+        );
+
+        root.style.setProperty(
+            "--text",
+            "#f5f5f5"
+        );
+
+        root.style.setProperty(
+            "--muted",
+            "#a0a0aa"
+        );
+
+        root.style.setProperty(
+            "--border",
+            "#303039"
+        );
+
+        root.style.setProperty(
+            "--shadow",
+            "0 8px 25px rgba(0,0,0,0.25)"
+        );
+
+        updateThemeButton("☾");
     }
+}
 
-});
+
+// ----------------------------------------
+// Theme Button
+// ----------------------------------------
+
+function updateThemeButton(icon) {
+
+    const themeButton =
+        document.getElementById(
+            "themeToggle"
+        );
+
+    if (themeButton) {
+        themeButton.textContent = icon;
+    }
+}
+
+
+// ----------------------------------------
+// Initialize
+// ----------------------------------------
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        showPage("home");
+
+        const searchInput =
+            document.getElementById(
+                "searchInput"
+            );
+
+        if (searchInput) {
+
+            searchInput.addEventListener(
+                "keydown",
+                function(event) {
+
+                    if (event.key === "Enter") {
+                        searchManga();
+                    }
+
+                }
+            );
+        }
+
+    }
+);
