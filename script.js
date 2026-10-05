@@ -8,8 +8,7 @@ const mangaData = {
         genre: "Action · Fantasy",
         description:
             "A mysterious story about a young hero who discovers a hidden power connected to the shadows.",
-        coverClass: "cover-one",
-        coverText: "SHADOW\nECLIPSE"
+        coverImage: "images/shadow-eclipse.JPG"
     },
 
     "Neon Hearts": {
@@ -17,8 +16,7 @@ const mangaData = {
         genre: "Romance · Drama",
         description:
             "In a city filled with neon lights, two young people slowly discover that love can appear in the most unexpected places.",
-        coverClass: "cover-two",
-        coverText: "NEON\nHEARTS"
+        coverImage: "images/neon-hearts.JPG"
     },
 
     "Crimson Blade": {
@@ -26,8 +24,7 @@ const mangaData = {
         genre: "Action · Adventure",
         description:
             "A wandering swordsman carries a legendary crimson blade and searches for the truth behind a forgotten war.",
-        coverClass: "cover-three",
-        coverText: "CRIMSON\nBLADE"
+        coverImage: "images/crimson-blade.JPG"
     },
 
     "Beyond Tomorrow": {
@@ -35,8 +32,7 @@ const mangaData = {
         genre: "Slice of Life · Drama",
         description:
             "A quiet story about friendship, dreams, growing up, and finding the courage to take the next step.",
-        coverClass: "cover-four",
-        coverText: "BEYOND\nTOMORROW"
+        coverImage: "images/beyond-tomorrow.JPG"
     }
 };
 
@@ -66,7 +62,10 @@ function showPage(pageName) {
         document.getElementById(pageName + "Page");
 
     if (!targetPage) {
-        console.error("Page not found:", pageName + "Page");
+        console.error(
+            "Page not found:",
+            pageName + "Page"
+        );
         return;
     }
 
@@ -89,50 +88,59 @@ function openManga(mangaName) {
     const manga = mangaData[mangaName];
 
     if (!manga) {
-        console.error("Manga not found:", mangaName);
+        console.error(
+            "Manga not found:",
+            mangaName
+        );
         return;
     }
 
     currentManga = mangaName;
     currentChapter = 1;
 
+
+    // Update title
     const title =
         document.getElementById("detailTitle");
-
-    const genre =
-        document.getElementById("detailGenre");
-
-    const description =
-        document.getElementById("detailDescription");
-
-    const cover =
-        document.getElementById("detailCover");
-
-    const coverText =
-        document.getElementById("detailCoverText");
 
     if (title) {
         title.textContent = manga.title;
     }
 
+
+    // Update genre
+    const genre =
+        document.getElementById("detailGenre");
+
     if (genre) {
         genre.textContent = manga.genre;
     }
 
+
+    // Update description
+    const description =
+        document.getElementById("detailDescription");
+
     if (description) {
-        description.textContent = manga.description;
+        description.textContent =
+            manga.description;
     }
 
-    if (cover) {
-        cover.className =
-            "detail-cover " + manga.coverClass;
+
+    // Update manga cover image
+    const coverImage =
+        document.getElementById(
+            "detailCoverImage"
+        );
+
+    if (coverImage) {
+        coverImage.src = manga.coverImage;
+        coverImage.alt =
+            manga.title + " manga cover";
     }
 
-    if (coverText) {
-        coverText.innerHTML =
-            manga.coverText.replace(/\n/g, "<br>");
-    }
 
+    // Open detail page
     showPage("detail");
 }
 
@@ -145,15 +153,20 @@ function openReader(chapterNumber) {
 
     currentChapter = chapterNumber;
 
-    const manga = mangaData[currentManga];
+    const manga =
+        mangaData[currentManga];
 
     if (!manga) {
-        console.error("Current manga not found.");
+        console.error(
+            "Current manga not found."
+        );
         return;
     }
 
     const readerTitle =
-        document.getElementById("readerTitle");
+        document.getElementById(
+            "readerTitle"
+        );
 
     if (readerTitle) {
         readerTitle.textContent =
@@ -180,7 +193,9 @@ function previousChapter() {
             mangaData[currentManga];
 
         const readerTitle =
-            document.getElementById("readerTitle");
+            document.getElementById(
+                "readerTitle"
+            );
 
         if (readerTitle && manga) {
             readerTitle.textContent =
@@ -196,7 +211,9 @@ function previousChapter() {
 
     } else {
 
-        alert("You are already reading Chapter 1.");
+        alert(
+            "You are already reading Chapter 1."
+        );
     }
 }
 
@@ -215,7 +232,9 @@ function nextChapter() {
             mangaData[currentManga];
 
         const readerTitle =
-            document.getElementById("readerTitle");
+            document.getElementById(
+                "readerTitle"
+            );
 
         if (readerTitle && manga) {
             readerTitle.textContent =
@@ -231,7 +250,9 @@ function nextChapter() {
 
     } else {
 
-        alert("You have reached the latest chapter.");
+        alert(
+            "You have reached the latest chapter."
+        );
     }
 }
 
@@ -243,14 +264,18 @@ function nextChapter() {
 function searchManga() {
 
     const input =
-        document.getElementById("searchInput");
+        document.getElementById(
+            "searchInput"
+        );
 
     if (!input) {
         return;
     }
 
     const searchText =
-        input.value.toLowerCase().trim();
+        input.value
+            .toLowerCase()
+            .trim();
 
     const cards =
         document.querySelectorAll(
@@ -260,19 +285,24 @@ function searchManga() {
     cards.forEach(function(card) {
 
         const title =
-            card.getAttribute("data-title");
+            card.getAttribute(
+                "data-title"
+            );
 
         if (!title) {
             return;
         }
 
         if (
-            title.toLowerCase().includes(searchText)
+            title
+                .toLowerCase()
+                .includes(searchText)
         ) {
             card.style.display = "";
         } else {
             card.style.display = "none";
         }
+
     });
 }
 
@@ -287,7 +317,10 @@ function toggleTheme() {
         document.documentElement;
 
     const currentTheme =
-        root.getAttribute("data-theme") || "dark";
+        root.getAttribute(
+            "data-theme"
+        ) || "dark";
+
 
     if (currentTheme === "dark") {
 
@@ -337,7 +370,9 @@ function toggleTheme() {
         );
 
         const button =
-            document.querySelector(".theme-btn");
+            document.querySelector(
+                ".theme-btn"
+            );
 
         if (button) {
             button.textContent = "☀";
@@ -391,7 +426,9 @@ function toggleTheme() {
         );
 
         const button =
-            document.querySelector(".theme-btn");
+            document.querySelector(
+                ".theme-btn"
+            );
 
         if (button) {
             button.textContent = "☾";
@@ -407,8 +444,6 @@ function toggleTheme() {
 document.addEventListener(
     "DOMContentLoaded",
     function() {
-
         showPage("home");
-
     }
 );
