@@ -41,34 +41,37 @@ const mangaData = {
 };
 
 
-// ----------------------------------------
+// ========================================
 // Current State
-// ----------------------------------------
+// ========================================
 
 let currentManga = "Shadow Eclipse";
 let currentChapter = 1;
 
 
-// ----------------------------------------
+// ========================================
 // Page Navigation
-// ----------------------------------------
+// ========================================
 
 function showPage(pageName) {
 
     const pages = document.querySelectorAll(".page");
 
     pages.forEach(function(page) {
-        page.classList.remove("active");
         page.classList.add("hidden");
+        page.classList.remove("active");
     });
 
     const targetPage =
         document.getElementById(pageName + "Page");
 
-    if (targetPage) {
-        targetPage.classList.remove("hidden");
-        targetPage.classList.add("active");
+    if (!targetPage) {
+        console.error("Page not found:", pageName + "Page");
+        return;
     }
+
+    targetPage.classList.remove("hidden");
+    targetPage.classList.add("active");
 
     window.scrollTo({
         top: 0,
@@ -77,15 +80,16 @@ function showPage(pageName) {
 }
 
 
-// ----------------------------------------
-// Open Manga
-// ----------------------------------------
+// ========================================
+// Open Manga Detail
+// ========================================
 
 function openManga(mangaName) {
 
     const manga = mangaData[mangaName];
 
     if (!manga) {
+        console.error("Manga not found:", mangaName);
         return;
     }
 
@@ -126,16 +130,16 @@ function openManga(mangaName) {
 
     if (coverText) {
         coverText.innerHTML =
-            manga.coverText.replace("\n", "<br>");
+            manga.coverText.replace(/\n/g, "<br>");
     }
 
     showPage("detail");
 }
 
 
-// ----------------------------------------
+// ========================================
 // Open Reader
-// ----------------------------------------
+// ========================================
 
 function openReader(chapterNumber) {
 
@@ -144,6 +148,7 @@ function openReader(chapterNumber) {
     const manga = mangaData[currentManga];
 
     if (!manga) {
+        console.error("Current manga not found.");
         return;
     }
 
@@ -161,9 +166,9 @@ function openReader(chapterNumber) {
 }
 
 
-// ----------------------------------------
+// ========================================
 // Previous Chapter
-// ----------------------------------------
+// ========================================
 
 function previousChapter() {
 
@@ -171,12 +176,18 @@ function previousChapter() {
 
         currentChapter--;
 
-        const manga = mangaData[currentManga];
+        const manga =
+            mangaData[currentManga];
 
-        document.getElementById("readerTitle").textContent =
-            manga.title +
-            " — Chapter " +
-            currentChapter;
+        const readerTitle =
+            document.getElementById("readerTitle");
+
+        if (readerTitle && manga) {
+            readerTitle.textContent =
+                manga.title +
+                " — Chapter " +
+                currentChapter;
+        }
 
         window.scrollTo({
             top: 0,
@@ -190,9 +201,9 @@ function previousChapter() {
 }
 
 
-// ----------------------------------------
+// ========================================
 // Next Chapter
-// ----------------------------------------
+// ========================================
 
 function nextChapter() {
 
@@ -200,12 +211,18 @@ function nextChapter() {
 
         currentChapter++;
 
-        const manga = mangaData[currentManga];
+        const manga =
+            mangaData[currentManga];
 
-        document.getElementById("readerTitle").textContent =
-            manga.title +
-            " — Chapter " +
-            currentChapter;
+        const readerTitle =
+            document.getElementById("readerTitle");
+
+        if (readerTitle && manga) {
+            readerTitle.textContent =
+                manga.title +
+                " — Chapter " +
+                currentChapter;
+        }
 
         window.scrollTo({
             top: 0,
@@ -219,9 +236,9 @@ function nextChapter() {
 }
 
 
-// ----------------------------------------
-// Search
-// ----------------------------------------
+// ========================================
+// Search Manga
+// ========================================
 
 function searchManga() {
 
@@ -260,9 +277,9 @@ function searchManga() {
 }
 
 
-// ----------------------------------------
-// Dark / Light Mode
-// ----------------------------------------
+// ========================================
+// Dark / Light Theme
+// ========================================
 
 function toggleTheme() {
 
@@ -383,9 +400,9 @@ function toggleTheme() {
 }
 
 
-// ----------------------------------------
+// ========================================
 // Start Website
-// ----------------------------------------
+// ========================================
 
 document.addEventListener(
     "DOMContentLoaded",
