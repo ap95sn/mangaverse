@@ -1,3 +1,7 @@
+/* ========================================
+   MangaVerse - Main Stylesheet
+======================================== */
+
 * {
     margin: 0;
     padding: 0;
@@ -30,7 +34,9 @@ body {
 
     background: var(--bg);
     color: var(--text);
+
     min-height: 100vh;
+
     line-height: 1.5;
 }
 
@@ -56,6 +62,7 @@ input:focus-visible {
 
 .navbar {
     height: 70px;
+
     padding: 0 7%;
 
     display: flex;
@@ -64,9 +71,11 @@ input:focus-visible {
 
     position: sticky;
     top: 0;
+
     z-index: 1000;
 
     background: rgba(15, 16, 20, 0.94);
+
     border-bottom: 1px solid var(--border);
 
     backdrop-filter: blur(12px);
@@ -75,9 +84,12 @@ input:focus-visible {
 
 .logo {
     color: var(--text);
+
     font-size: 24px;
     font-weight: 800;
+
     letter-spacing: -1px;
+
     white-space: nowrap;
 }
 
@@ -88,19 +100,23 @@ input:focus-visible {
 .nav-links {
     display: flex;
     align-items: center;
+
     gap: 6px;
 }
 
 .navbar button {
     border: none;
+
     background: transparent;
 
     color: var(--text);
 
     padding: 10px 14px;
+
     border-radius: 8px;
 
     font-size: 14px;
+
     cursor: pointer;
 
     transition:
@@ -188,7 +204,9 @@ input:focus-visible {
 
 .hero h1 {
     font-size: clamp(44px, 8vw, 78px);
+
     line-height: 0.98;
+
     letter-spacing: -3px;
 
     margin-bottom: 28px;
@@ -204,6 +222,7 @@ input:focus-visible {
     color: var(--muted);
 
     font-size: 16px;
+
     line-height: 1.8;
 
     margin-bottom: 32px;
@@ -213,6 +232,7 @@ input:focus-visible {
     border: none;
 
     background: var(--accent);
+
     color: var(--white);
 
     padding: 15px 24px;
@@ -235,6 +255,7 @@ input:focus-visible {
 
 .primary-btn:hover {
     background: var(--accent-dark);
+
     transform: translateY(-2px);
 
     box-shadow:
@@ -264,16 +285,19 @@ input:focus-visible {
 .section-title h2,
 .library-header h1 {
     font-size: 36px;
+
     line-height: 1.1;
 }
 
 .text-btn {
     border: none;
+
     background: transparent;
 
     color: var(--accent);
 
     font-weight: 700;
+
     font-size: 14px;
 
     cursor: pointer;
@@ -305,6 +329,7 @@ input:focus-visible {
     background: var(--card);
 
     border: 1px solid var(--border);
+
     border-radius: 13px;
 
     cursor: pointer;
@@ -352,11 +377,37 @@ input:focus-visible {
     font-weight: 900;
 
     line-height: 1.05;
+
     letter-spacing: 3px;
 
     text-shadow:
         0 3px 15px rgba(0, 0, 0, 0.4);
 }
+
+
+/* ========================================
+   REAL MANGA COVER IMAGES
+======================================== */
+
+.cover img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 1;
+
+    object-fit: cover;
+
+    object-position: center;
+}
+
+
+/* Cover decorative circle */
 
 .cover::before {
     content: "";
@@ -375,7 +426,14 @@ input:focus-visible {
 
     top: -70px;
     right: -60px;
+
+    z-index: 2;
+
+    pointer-events: none;
 }
+
+
+/* Cover light overlay */
 
 .cover::after {
     content: "";
@@ -387,21 +445,29 @@ input:focus-visible {
     background:
         linear-gradient(
             135deg,
-            rgba(255,255,255,0.08),
+            rgba(255, 255, 255, 0.08),
             transparent 35%,
-            rgba(0,0,0,0.18)
+            rgba(0, 0, 0, 0.18)
         );
 
     pointer-events: none;
-}
 
-.cover span {
-    position: relative;
     z-index: 2;
 }
 
 
-/* Shadow Eclipse */
+/* Old cover text support */
+
+.cover span {
+    position: relative;
+
+    z-index: 3;
+}
+
+
+/* =========================
+   COVER COLOR FALLBACKS
+========================= */
 
 .cover-one {
     background:
@@ -424,8 +490,6 @@ input:focus-visible {
 }
 
 
-/* Neon Hearts */
-
 .cover-two {
     background:
         radial-gradient(
@@ -447,8 +511,6 @@ input:focus-visible {
 }
 
 
-/* Crimson Blade */
-
 .cover-three {
     background:
         radial-gradient(
@@ -469,8 +531,6 @@ input:focus-visible {
         0 0 80px rgba(255, 80, 50, 0.22);
 }
 
-
-/* Beyond Tomorrow */
 
 .cover-four {
     background:
@@ -522,6 +582,7 @@ input:focus-visible {
 
 .library {
     max-width: 1300px;
+
     margin: auto;
 }
 
@@ -548,9 +609,11 @@ input:focus-visible {
     padding: 15px 18px;
 
     border: 1px solid var(--border);
+
     border-radius: 9px;
 
     background: var(--card);
+
     color: var(--text);
 
     font-size: 15px;
@@ -617,16 +680,44 @@ input:focus-visible {
     font-weight: 900;
 
     line-height: 1.05;
+
     letter-spacing: 3px;
 
     box-shadow:
         0 20px 50px rgba(0, 0, 0, 0.3);
 }
 
+
+/* ========================================
+   DETAIL COVER IMAGE
+======================================== */
+
+.detail-cover img {
+    width: 100%;
+    height: 100%;
+
+    min-height: 430px;
+
+    display: block;
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 1;
+
+    object-fit: cover;
+
+    object-position: center;
+}
+
+
 .detail-cover span {
     position: relative;
-    z-index: 2;
+
+    z-index: 3;
 }
+
 
 .detail-info {
     padding-top: 15px;
@@ -646,6 +737,7 @@ input:focus-visible {
     color: var(--accent);
 
     font-size: 14px;
+
     font-weight: 700;
 }
 
@@ -664,11 +756,13 @@ input:focus-visible {
 
     display: flex;
     align-items: center;
+
     gap: 9px;
 
     padding: 9px 13px;
 
     border: 1px solid var(--border);
+
     border-radius: 999px;
 
     background: var(--card);
@@ -717,9 +811,11 @@ input:focus-visible {
     padding: 17px 18px;
 
     border: 1px solid var(--border);
+
     border-radius: 9px;
 
     background: var(--card);
+
     color: var(--text);
 
     font-size: 14px;
@@ -734,11 +830,13 @@ input:focus-visible {
 
 .chapter-list button span:last-child {
     color: var(--accent);
+
     font-weight: 700;
 }
 
 .chapter-list button:hover {
     border-color: var(--accent);
+
     background: var(--card-hover);
 
     transform: translateX(4px);
@@ -748,6 +846,7 @@ input:focus-visible {
     margin-top: 25px;
 
     border: none;
+
     background: transparent;
 
     color: var(--muted);
@@ -789,9 +888,11 @@ input:focus-visible {
     flex-shrink: 0;
 
     border: 1px solid var(--border);
+
     border-radius: 8px;
 
     background: var(--card);
+
     color: var(--text);
 
     padding: 10px 15px;
@@ -805,6 +906,7 @@ input:focus-visible {
 
 .reader-back:hover {
     border-color: var(--accent);
+
     background: var(--card-hover);
 }
 
@@ -828,7 +930,9 @@ input:focus-visible {
 }
 
 
-/* Manga Panels */
+/* =========================
+   MANGA PANELS
+========================= */
 
 .manga-page {
     display: flex;
@@ -923,9 +1027,11 @@ input:focus-visible {
     padding: 13px 20px;
 
     border: none;
+
     border-radius: 8px;
 
     background: var(--accent);
+
     color: white;
 
     font-size: 13px;
@@ -940,6 +1046,7 @@ input:focus-visible {
 
 .reader-controls button:hover {
     background: var(--accent-dark);
+
     transform: translateY(-2px);
 }
 
@@ -993,12 +1100,17 @@ input:focus-visible {
     }
 
     .detail {
-        grid-template-columns: 250px minmax(0, 1fr);
+        grid-template-columns:
+            250px minmax(0, 1fr);
 
         gap: 40px;
     }
 
     .detail-cover {
+        min-height: 370px;
+    }
+
+    .detail-cover img {
         min-height: 370px;
     }
 
@@ -1082,6 +1194,7 @@ input:focus-visible {
 
     .section-title {
         align-items: flex-start;
+
         flex-direction: column;
 
         margin-bottom: 25px;
@@ -1112,6 +1225,10 @@ input:focus-visible {
         letter-spacing: 2px;
     }
 
+    .cover img {
+        min-height: 200px;
+    }
+
     .card-info {
         padding: 12px;
     }
@@ -1139,6 +1256,10 @@ input:focus-visible {
         min-height: 350px;
 
         margin-bottom: 30px;
+    }
+
+    .detail-cover img {
+        min-height: 350px;
     }
 
     .detail-info {
@@ -1236,6 +1357,10 @@ input:focus-visible {
         min-height: 175px;
 
         font-size: 14px;
+    }
+
+    .cover img {
+        min-height: 175px;
     }
 
     .card-info {
