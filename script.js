@@ -2,55 +2,47 @@
 // MangaVerse - JavaScript
 // ========================================
 
-// ----------------------------------------
-// Manga Data
-// ----------------------------------------
-
 const mangaData = {
     "Shadow Eclipse": {
-        id: "shadow",
         title: "Shadow Eclipse",
         genre: "Action · Fantasy",
         description:
-            "A young warrior discovers a mysterious power hidden within his shadow and becomes involved in a conflict between ancient forces.",
+            "A mysterious story about a young hero who discovers a hidden power connected to the shadows.",
         coverClass: "cover-one",
-        coverText: "SHADOW ECLIPSE"
+        coverText: "SHADOW\nECLIPSE"
     },
 
     "Neon Hearts": {
-        id: "neon",
         title: "Neon Hearts",
         genre: "Romance · Drama",
         description:
             "In a city filled with neon lights, two young people slowly discover that love can appear in the most unexpected places.",
         coverClass: "cover-two",
-        coverText: "NEON HEARTS"
+        coverText: "NEON\nHEARTS"
     },
 
     "Crimson Blade": {
-        id: "crimson",
         title: "Crimson Blade",
         genre: "Action · Adventure",
         description:
-            "A wandering swordsman carries a legendary crimson blade and searches for the truth behind a war that changed his homeland.",
+            "A wandering swordsman carries a legendary crimson blade and searches for the truth behind a forgotten war.",
         coverClass: "cover-three",
-        coverText: "CRIMSON BLADE"
+        coverText: "CRIMSON\nBLADE"
     },
 
     "Beyond Tomorrow": {
-        id: "tomorrow",
         title: "Beyond Tomorrow",
         genre: "Slice of Life · Drama",
         description:
-            "A quiet story about friendship, dreams, growing up, and finding the courage to take the next step toward tomorrow.",
+            "A quiet story about friendship, dreams, growing up, and finding the courage to take the next step.",
         coverClass: "cover-four",
-        coverText: "BEYOND TOMORROW"
+        coverText: "BEYOND\nTOMORROW"
     }
 };
 
 
 // ----------------------------------------
-// Reader State
+// Current State
 // ----------------------------------------
 
 let currentManga = "Shadow Eclipse";
@@ -67,12 +59,14 @@ function showPage(pageName) {
 
     pages.forEach(function(page) {
         page.classList.remove("active");
+        page.classList.add("hidden");
     });
 
     const targetPage =
         document.getElementById(pageName + "Page");
 
     if (targetPage) {
+        targetPage.classList.remove("hidden");
         targetPage.classList.add("active");
     }
 
@@ -92,49 +86,47 @@ function openManga(mangaName) {
     const manga = mangaData[mangaName];
 
     if (!manga) {
-        console.log("Manga not found:", mangaName);
         return;
     }
 
     currentManga = mangaName;
     currentChapter = 1;
 
-    const detailTitle =
+    const title =
         document.getElementById("detailTitle");
 
-    if (detailTitle) {
-        detailTitle.textContent = manga.title;
-    }
-
-    const detailGenre =
+    const genre =
         document.getElementById("detailGenre");
 
-    if (detailGenre) {
-        detailGenre.textContent = manga.genre;
-    }
-
-    const detailDescription =
+    const description =
         document.getElementById("detailDescription");
 
-    if (detailDescription) {
-        detailDescription.textContent =
-            manga.description;
-    }
-
-    const detailCover =
+    const cover =
         document.getElementById("detailCover");
 
-    if (detailCover) {
-        detailCover.className =
+    const coverText =
+        document.getElementById("detailCoverText");
+
+    if (title) {
+        title.textContent = manga.title;
+    }
+
+    if (genre) {
+        genre.textContent = manga.genre;
+    }
+
+    if (description) {
+        description.textContent = manga.description;
+    }
+
+    if (cover) {
+        cover.className =
             "detail-cover " + manga.coverClass;
     }
 
-    const detailCoverText =
-        document.getElementById("detailCoverText");
-
-    if (detailCoverText) {
-        detailCoverText.textContent =
-            manga.coverText;
+    if (coverText) {
+        coverText.innerHTML =
+            manga.coverText.replace("\n", "<br>");
     }
 
     showPage("detail");
@@ -165,92 +157,7 @@ function openReader(chapterNumber) {
             currentChapter;
     }
 
-    updateReaderContent();
-
     showPage("reader");
-}
-
-
-// ----------------------------------------
-// Reader Content
-// ----------------------------------------
-
-function updateReaderContent() {
-
-    const manga = mangaData[currentManga];
-
-    if (!manga) {
-        return;
-    }
-
-    const readerContent =
-        document.getElementById("readerContent");
-
-    if (!readerContent) {
-        return;
-    }
-
-    const stories = {
-
-        "Shadow Eclipse": [
-            "The night was silent as a strange shadow appeared beneath the old tower.",
-            "Kai raised his hand and watched the darkness move independently from his body.",
-            "A mysterious voice whispered from the shadows, warning him that the eclipse was coming.",
-            "For the first time, Kai realized that the power he feared might also be the only thing capable of protecting his city."
-        ],
-
-        "Neon Hearts": [
-            "The city lights reflected across the rainy streets as Mia waited beneath a glowing sign.",
-            "A familiar voice called her name, and she turned to see someone she had not expected to meet.",
-            "They walked through the neon streets together, talking about dreams they had never told anyone else.",
-            "Neither of them knew where the night would lead, but somehow the silence between them felt comfortable."
-        ],
-
-        "Crimson Blade": [
-            "The old road stretched toward the mountains while the crimson blade rested quietly at his side.",
-            "A distant sound of steel echoed through the forest, forcing the swordsman to stop.",
-            "He discovered a symbol carved into a tree — the same symbol that had appeared before the war.",
-            "The truth he had searched for was finally beginning to reveal itself."
-        ],
-
-        "Beyond Tomorrow": [
-            "The morning began like any other, but today felt strangely different.",
-            "After months of hesitation, Ren finally decided to take the first step toward his dream.",
-            "His friends gathered around him, reminding him that growing up did not mean leaving everyone behind.",
-            "Tomorrow was still uncertain, but for the first time, he was ready to face it."
-        ]
-    };
-
-    const story = stories[currentManga];
-
-    let html = "";
-
-    story.forEach(function(text, index) {
-
-        html += `
-            <div class="manga-panel ${manga.coverClass}">
-
-                <span class="panel-number">
-                    ${index + 1}
-                </span>
-
-                <div class="panel-content">
-
-                    <div class="panel-title">
-                        Chapter ${currentChapter}
-                    </div>
-
-                    <p>
-                        ${text}
-                    </p>
-
-                </div>
-
-            </div>
-        `;
-    });
-
-    readerContent.innerHTML = html;
 }
 
 
@@ -264,8 +171,12 @@ function previousChapter() {
 
         currentChapter--;
 
-        updateReaderTitle();
-        updateReaderContent();
+        const manga = mangaData[currentManga];
+
+        document.getElementById("readerTitle").textContent =
+            manga.title +
+            " — Chapter " +
+            currentChapter;
 
         window.scrollTo({
             top: 0,
@@ -274,9 +185,7 @@ function previousChapter() {
 
     } else {
 
-        alert(
-            "You are already reading Chapter 1."
-        );
+        alert("You are already reading Chapter 1.");
     }
 }
 
@@ -291,8 +200,12 @@ function nextChapter() {
 
         currentChapter++;
 
-        updateReaderTitle();
-        updateReaderContent();
+        const manga = mangaData[currentManga];
+
+        document.getElementById("readerTitle").textContent =
+            manga.title +
+            " — Chapter " +
+            currentChapter;
 
         window.scrollTo({
             top: 0,
@@ -301,34 +214,7 @@ function nextChapter() {
 
     } else {
 
-        alert(
-            "You have reached the latest chapter."
-        );
-    }
-}
-
-
-// ----------------------------------------
-// Update Reader Title
-// ----------------------------------------
-
-function updateReaderTitle() {
-
-    const manga = mangaData[currentManga];
-
-    if (!manga) {
-        return;
-    }
-
-    const readerTitle =
-        document.getElementById("readerTitle");
-
-    if (readerTitle) {
-
-        readerTitle.textContent =
-            manga.title +
-            " — Chapter " +
-            currentChapter;
+        alert("You have reached the latest chapter.");
     }
 }
 
@@ -339,65 +225,37 @@ function updateReaderTitle() {
 
 function searchManga() {
 
-    const searchInput =
+    const input =
         document.getElementById("searchInput");
 
-    if (!searchInput) {
+    if (!input) {
         return;
     }
 
     const searchText =
-        searchInput.value
-        .toLowerCase()
-        .trim();
+        input.value.toLowerCase().trim();
 
     const cards =
         document.querySelectorAll(
-            "#libraryPage .manga-card"
+            "#libraryGrid .manga-card"
         );
 
     cards.forEach(function(card) {
 
-        const titleElement =
-            card.querySelector("h3");
+        const title =
+            card.getAttribute("data-title");
 
-        if (!titleElement) {
+        if (!title) {
             return;
         }
 
-        const title =
-            titleElement.textContent
-            .toLowerCase();
-
-        if (title.includes(searchText)) {
+        if (
+            title.toLowerCase().includes(searchText)
+        ) {
             card.style.display = "";
         } else {
             card.style.display = "none";
         }
-    });
-}
-
-
-// ----------------------------------------
-// Reset Search
-// ----------------------------------------
-
-function resetSearch() {
-
-    const searchInput =
-        document.getElementById("searchInput");
-
-    if (searchInput) {
-        searchInput.value = "";
-    }
-
-    const cards =
-        document.querySelectorAll(
-            "#libraryPage .manga-card"
-        );
-
-    cards.forEach(function(card) {
-        card.style.display = "";
     });
 }
 
@@ -461,7 +319,12 @@ function toggleTheme() {
             "0 8px 25px rgba(0,0,0,0.08)"
         );
 
-        updateThemeButton("☀");
+        const button =
+            document.querySelector(".theme-btn");
+
+        if (button) {
+            button.textContent = "☀";
+        }
 
     } else {
 
@@ -510,30 +373,18 @@ function toggleTheme() {
             "0 8px 25px rgba(0,0,0,0.25)"
         );
 
-        updateThemeButton("☾");
+        const button =
+            document.querySelector(".theme-btn");
+
+        if (button) {
+            button.textContent = "☾";
+        }
     }
 }
 
 
 // ----------------------------------------
-// Theme Button
-// ----------------------------------------
-
-function updateThemeButton(icon) {
-
-    const themeButton =
-        document.getElementById(
-            "themeToggle"
-        );
-
-    if (themeButton) {
-        themeButton.textContent = icon;
-    }
-}
-
-
-// ----------------------------------------
-// Initialize
+// Start Website
 // ----------------------------------------
 
 document.addEventListener(
@@ -541,25 +392,6 @@ document.addEventListener(
     function() {
 
         showPage("home");
-
-        const searchInput =
-            document.getElementById(
-                "searchInput"
-            );
-
-        if (searchInput) {
-
-            searchInput.addEventListener(
-                "keydown",
-                function(event) {
-
-                    if (event.key === "Enter") {
-                        searchManga();
-                    }
-
-                }
-            );
-        }
 
     }
 );
