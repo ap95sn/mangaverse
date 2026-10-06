@@ -43,12 +43,20 @@ const defaultMangaData = [
 
 const STORAGE_KEY = "mangaverseMangaData";
 
+
+/* =========================
+   LOAD MANGA DATA
+========================= */
+
 function loadMangaData() {
-    const savedData = localStorage.getItem(STORAGE_KEY);
+    const savedData =
+        localStorage.getItem(STORAGE_KEY);
 
     if (!savedData) {
         const initialData =
-            JSON.parse(JSON.stringify(defaultMangaData));
+            JSON.parse(
+                JSON.stringify(defaultMangaData)
+            );
 
         localStorage.setItem(
             STORAGE_KEY,
@@ -59,7 +67,8 @@ function loadMangaData() {
     }
 
     try {
-        const parsedData = JSON.parse(savedData);
+        const parsedData =
+            JSON.parse(savedData);
 
         if (Array.isArray(parsedData)) {
             return parsedData;
@@ -72,7 +81,9 @@ function loadMangaData() {
     }
 
     const fallbackData =
-        JSON.parse(JSON.stringify(defaultMangaData));
+        JSON.parse(
+            JSON.stringify(defaultMangaData)
+        );
 
     localStorage.setItem(
         STORAGE_KEY,
@@ -202,13 +213,19 @@ function loginUser(event) {
     event.preventDefault();
 
     const usernameInput =
-        document.getElementById("usernameInput");
+        document.getElementById(
+            "usernameInput"
+        );
 
     const passwordInput =
-        document.getElementById("passwordInput");
+        document.getElementById(
+            "passwordInput"
+        );
 
     const loginMessage =
-        document.getElementById("loginMessage");
+        document.getElementById(
+            "loginMessage"
+        );
 
     if (
         !usernameInput ||
@@ -254,9 +271,7 @@ function loginUser(event) {
         } else {
             showPage("home");
         }
-
     } else {
-
         if (loginMessage) {
             loginMessage.textContent =
                 "Invalid username or password.";
@@ -277,7 +292,7 @@ function logoutUser() {
 
 
 /* =========================
-   MANGA STORAGE
+   STORAGE
 ========================= */
 
 function saveMangaData() {
@@ -300,7 +315,8 @@ function createMangaId(title) {
             .replace(/[^a-z0-9]+/g, "-")
             .replace(/^-+|-+$/g, "");
 
-    let newId = baseId || "manga";
+    let newId =
+        baseId || "manga";
 
     const idExists =
         mangaData.some(function (manga) {
@@ -443,7 +459,9 @@ function openManga(mangaId) {
 
     if (!manga) return;
 
-    currentManga = manga.id;
+    currentManga =
+        manga.id;
+
     currentChapter = 1;
 
     const detailTitle =
@@ -497,7 +515,8 @@ function openManga(mangaId) {
 
     if (detailStatus) {
         detailStatus.textContent =
-            manga.status || "Ongoing";
+            manga.status ||
+            "Ongoing";
     }
 
     showPage("detail");
@@ -646,7 +665,6 @@ function toggleTheme() {
         );
 
     if (currentTheme === "dark") {
-
         html.setAttribute(
             "data-theme",
             "light"
@@ -656,9 +674,7 @@ function toggleTheme() {
             "mangaverseTheme",
             "light"
         );
-
     } else {
-
         html.setAttribute(
             "data-theme",
             "dark"
@@ -678,15 +694,12 @@ function loadTheme() {
         );
 
     if (savedTheme === "dark") {
-
         document.documentElement
             .setAttribute(
                 "data-theme",
                 "dark"
             );
-
     } else {
-
         document.documentElement
             .setAttribute(
                 "data-theme",
@@ -740,7 +753,6 @@ function renderAdminMangaList() {
     if (!adminList) return;
 
     if (mangaData.length === 0) {
-
         adminList.innerHTML = `
             <div class="admin-empty">
                 No manga available.
@@ -754,7 +766,6 @@ function renderAdminMangaList() {
     adminList.innerHTML =
         mangaData
             .map(function (manga) {
-
                 const safeTitle =
                     escapeHTML(
                         manga.title
@@ -789,7 +800,6 @@ function renderAdminMangaList() {
 
                             </div>
 
-
                             <div class="admin-manga-text">
 
                                 <h3>
@@ -811,24 +821,22 @@ function renderAdminMangaList() {
 
                         </div>
 
-
                         <div
                             class="admin-manga-actions">
 
                             <button
                                 type="button"
                                 class="secondary-btn"
-                                onclick="editManga('${manga.id}')">
+                                onclick="editManga(event, '${manga.id}')">
 
                                 Edit
 
                             </button>
 
-
                             <button
                                 type="button"
                                 class="danger-btn"
-                                onclick="deleteManga('${manga.id}')">
+                                onclick="deleteManga(event, '${manga.id}')">
 
                                 Delete
 
@@ -844,7 +852,7 @@ function renderAdminMangaList() {
 
 
 /* =========================
-   ADD / EDIT MANGA
+   ADD / SAVE MANGA
 ========================= */
 
 function saveManga(event) {
@@ -919,12 +927,10 @@ function saveManga(event) {
     }
 
     if (editId) {
-
         const manga =
             findManga(editId);
 
         if (manga) {
-
             manga.title =
                 title;
 
@@ -940,25 +946,13 @@ function saveManga(event) {
             manga.status =
                 status;
         }
-
     } else {
-
         const newManga = {
-
-            id: createMangaId(
-                title
-            ),
-
+            id: createMangaId(title),
             title: title,
-
             genre: genre,
-
-            description:
-                description,
-
-            coverImage:
-                coverImage,
-
+            description: description,
+            coverImage: coverImage,
             status: status
         };
 
@@ -983,7 +977,17 @@ function saveManga(event) {
    EDIT MANGA
 ========================= */
 
-function editManga(mangaId) {
+function editManga(event, mangaId) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    const savedScrollY =
+        window.scrollY ||
+        window.pageYOffset ||
+        0;
+
     const manga =
         findManga(mangaId);
 
@@ -1058,7 +1062,8 @@ function editManga(mangaId) {
         manga.coverImage;
 
     statusInput.value =
-        manga.status || "Ongoing";
+        manga.status ||
+        "Ongoing";
 
     editIdInput.value =
         manga.id;
@@ -1079,14 +1084,42 @@ function editManga(mangaId) {
     }
 
     /*
-       IMPORTANT:
-       Do not call showPage("admin")
-       or window.scrollTo() here.
-
-       This keeps the page at the
-       current scroll position after
-       pressing Edit.
+       Restore the exact scroll
+       position after the browser
+       finishes processing the click.
     */
+
+    requestAnimationFrame(function () {
+        window.scrollTo({
+            top: savedScrollY,
+            left: 0,
+            behavior: "auto"
+        });
+
+        requestAnimationFrame(function () {
+            window.scrollTo({
+                top: savedScrollY,
+                left: 0,
+                behavior: "auto"
+            });
+        });
+    });
+
+    setTimeout(function () {
+        window.scrollTo({
+            top: savedScrollY,
+            left: 0,
+            behavior: "auto"
+        });
+    }, 50);
+
+    setTimeout(function () {
+        window.scrollTo({
+            top: savedScrollY,
+            left: 0,
+            behavior: "auto"
+        });
+    }, 150);
 }
 
 
@@ -1094,7 +1127,12 @@ function editManga(mangaId) {
    DELETE MANGA
 ========================= */
 
-function deleteManga(mangaId) {
+function deleteManga(event, mangaId) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
     const manga =
         findManga(mangaId);
 
@@ -1138,7 +1176,7 @@ function deleteManga(mangaId) {
 
 
 /* =========================
-   RESET ADMIN FORM
+   RESET FORM
 ========================= */
 
 function resetMangaForm() {
@@ -1225,17 +1263,12 @@ document.addEventListener(
         updateNavigation();
 
         if (loggedIn !== "true") {
-
             showPage("login");
-
         } else if (
             userRole === "admin"
         ) {
-
             showPage("admin");
-
         } else {
-
             showPage("home");
         }
     }
