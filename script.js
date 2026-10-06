@@ -1,1363 +1,1668 @@
-:root {
-    --bg: #fff8fc;
-    --surface: #ffffff;
-    --card: #ffffff;
-    --card-hover: #fff1f6;
-    --text: #454052;
-    --muted: #8e8999;
-    --accent: #ff9fbd;
-    --accent-dark: #ee7fa2;
-    --secondary: #a9d8ff;
-    --purple: #c9b6ff;
-    --border: #f0dfe7;
-    --danger: #e98b9b;
-    --danger-dark: #d96f82;
-    --shadow: 0 10px 30px rgba(92, 67, 86, 0.10);
-    --shadow-hover: 0 16px 35px rgba(92, 67, 86, 0.16);
-}
+/* =========================
+   DEFAULT MANGA DATA
+========================= */
 
-html[data-theme="dark"] {
-    --bg: #242238;
-    --surface: #2a2742;
-    --card: #302c49;
-    --card-hover: #393451;
-    --text: #f8f4ff;
-    --muted: #b9b2c9;
-    --accent: #ff9fbd;
-    --accent-dark: #ff86aa;
-    --secondary: #9acfff;
-    --purple: #c9b6ff;
-    --border: #47415c;
-    --danger: #e58c9d;
-    --danger-dark: #d96f82;
-    --shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
-    --shadow-hover: 0 16px 35px rgba(0, 0, 0, 0.30);
-}
+const defaultMangaData = [
+    {
+        id: "shadow-eclipse",
+        title: "Shadow Eclipse",
+        genre: "Action · Fantasy",
+        description:
+            "A mysterious story about a young hero who discovers a hidden power connected to the shadows.",
+        coverImage: "images/shadow-eclipse.JPG",
+        status: "Ongoing"
+    },
 
-* {
-    box-sizing: border-box;
-}
+    {
+        id: "neon-hearts",
+        title: "Neon Hearts",
+        genre: "Romance · Drama",
+        description:
+            "In a city filled with neon lights, two young people slowly discover that love can appear in the most unexpected places.",
+        coverImage: "images/neon-hearts.JPG",
+        status: "Ongoing"
+    },
 
-html {
-    scroll-behavior: smooth;
-}
+    {
+        id: "crimson-blade",
+        title: "Crimson Blade",
+        genre: "Action · Adventure",
+        description:
+            "A wandering swordsman carries a legendary crimson blade and searches for the truth behind a forgotten war.",
+        coverImage: "images/crimson-blade.JPG",
+        status: "Ongoing"
+    },
 
-body {
-    margin: 0;
-    min-height: 100vh;
-    background: var(--bg);
-    color: var(--text);
-    font-family: Arial, Helvetica, sans-serif;
-    line-height: 1.6;
-}
-
-button,
-input,
-textarea,
-select {
-    font: inherit;
-}
-
-button {
-    cursor: pointer;
-}
-
-img {
-    max-width: 100%;
-}
+    {
+        id: "beyond-tomorrow",
+        title: "Beyond Tomorrow",
+        genre: "Slice of Life · Drama",
+        description:
+            "A quiet story about friendship, dreams, growing up, and finding the courage to take the next step.",
+        coverImage: "images/beyond-tomorrow.JPG",
+        status: "Completed"
+    }
+];
 
 
-/* ====================
-   NAVBAR
-==================== */
+const STORAGE_KEY = "mangaverseMangaData";
 
-.navbar {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+/* =========================
+   LOAD MANGA DATA
+========================= */
 
-    padding: 16px 28px;
+function loadMangaData() {
 
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-}
+    const savedData =
+        localStorage.getItem(STORAGE_KEY);
 
-.nav-left,
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+    if (!savedData) {
 
-.logo {
-    border: none;
-    background: transparent;
+        const initialData =
+            JSON.parse(
+                JSON.stringify(defaultMangaData)
+            );
 
-    color: var(--text);
-    font-size: 1.35rem;
-    font-weight: 800;
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(initialData)
+        );
 
-    cursor: pointer;
-}
+        return initialData;
+    }
 
-.nav-btn,
-.theme-btn {
-    border: none;
-    background: transparent;
+    try {
 
-    color: var(--muted);
+        const parsedData =
+            JSON.parse(savedData);
 
-    padding: 8px 10px;
-    border-radius: 10px;
+        if (Array.isArray(parsedData)) {
+            return parsedData;
+        }
 
-    transition:
-        background 0.2s ease,
-        color 0.2s ease;
-}
+    } catch (error) {
 
-.nav-btn:hover,
-.theme-btn:hover {
-    background: var(--card-hover);
-    color: var(--accent-dark);
-}
+        console.error(
+            "Unable to load manga data:",
+            error
+        );
+    }
 
-.theme-btn {
-    font-size: 1.2rem;
+
+    const fallbackData =
+        JSON.parse(
+            JSON.stringify(defaultMangaData)
+        );
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(fallbackData)
+    );
+
+    return fallbackData;
 }
 
 
-/* ====================
-   PAGE SYSTEM
-==================== */
+let mangaData = loadMangaData();
 
-.page {
-    display: none;
+
+/* =========================
+   CURRENT READING STATE
+========================= */
+
+let currentManga = "shadow-eclipse";
+
+let currentChapter = 1;
+
+
+/* =========================
+   PAGE NAVIGATION
+========================= */
+
+function showPage(pageName) {
+
+    const loggedIn =
+        sessionStorage.getItem("loggedIn");
+
+    const userRole =
+        sessionStorage.getItem("userRole");
+
+
+    /* -------------------------
+       LOGIN PAGE
+    ------------------------- */
+
+    if (
+        pageName !== "login" &&
+        loggedIn !== "true"
+    ) {
+        pageName = "login";
+    }
+
+
+    /* -------------------------
+       ADMIN PROTECTION
+    ------------------------- */
+
+    if (
+        pageName === "admin" &&
+        (
+            loggedIn !== "true" ||
+            userRole !== "admin"
+        )
+    ) {
+        pageName = "login";
+    }
+
+
+    const pages =
+        document.querySelectorAll(".page");
+
+
+    pages.forEach(function (page) {
+
+        page.classList.remove("active");
+
+    });
+
+
+    const targetPage =
+        document.getElementById(
+            pageName + "Page"
+        );
+
+
+    if (targetPage) {
+
+        targetPage.classList.add("active");
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+
+
+    updateNavigation();
+
+
+    if (pageName === "home") {
+        renderHomeManga();
+    }
+
+
+    if (pageName === "library") {
+        renderLibraryManga();
+    }
+
+
+    if (pageName === "admin") {
+        renderAdminDashboard();
+    }
 }
 
-.page.active {
-    display: block;
+
+/* =========================
+   NAVIGATION DISPLAY
+========================= */
+
+function updateNavigation() {
+
+    const loggedIn =
+        sessionStorage.getItem("loggedIn");
+
+    const userRole =
+        sessionStorage.getItem("userRole");
+
+
+    const adminNavBtn =
+        document.getElementById(
+            "adminNavBtn"
+        );
+
+
+    if (!adminNavBtn) {
+        return;
+    }
+
+
+    if (
+        loggedIn === "true" &&
+        userRole === "admin"
+    ) {
+
+        adminNavBtn.style.display = "";
+
+    } else {
+
+        adminNavBtn.style.display = "none";
+
+    }
 }
 
 
-/* ====================
-   HERO
-==================== */
+/* =========================
+   LOGIN
+========================= */
 
-.hero {
-    min-height: 420px;
+const demoAccounts = {
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    admin: {
+        username: "admin",
+        password: "1234",
+        role: "admin"
+    },
 
-    padding: 70px 20px;
+    user: {
+        username: "user",
+        password: "1234",
+        role: "user"
+    }
 
-    background:
-        radial-gradient(
-            circle at top left,
-            rgba(255, 159, 189, 0.18),
-            transparent 40%
-        ),
-        radial-gradient(
-            circle at bottom right,
-            rgba(201, 182, 255, 0.18),
-            transparent 40%
+};
+
+
+function loginUser(event) {
+
+    event.preventDefault();
+
+
+    const usernameInput =
+        document.getElementById(
+            "usernameInput"
+        );
+
+
+    const passwordInput =
+        document.getElementById(
+            "passwordInput"
+        );
+
+
+    const loginMessage =
+        document.getElementById(
+            "loginMessage"
+        );
+
+
+    if (
+        !usernameInput ||
+        !passwordInput
+    ) {
+        return false;
+    }
+
+
+    const username =
+        usernameInput.value
+            .trim()
+            .toLowerCase();
+
+
+    const password =
+        passwordInput.value;
+
+
+    const account =
+        demoAccounts[username];
+
+
+    if (
+        account &&
+        account.password === password
+    ) {
+
+        sessionStorage.setItem(
+            "loggedIn",
+            "true"
+        );
+
+
+        sessionStorage.setItem(
+            "userRole",
+            account.role
+        );
+
+
+        if (loginMessage) {
+
+            loginMessage.textContent = "";
+
+        }
+
+
+        usernameInput.value = "";
+
+        passwordInput.value = "";
+
+
+        if (account.role === "admin") {
+
+            showPage("admin");
+
+        } else {
+
+            showPage("home");
+
+        }
+
+    } else {
+
+        if (loginMessage) {
+
+            loginMessage.textContent =
+                "Invalid username or password.";
+
+        }
+
+    }
+
+
+    return false;
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+function logoutUser() {
+
+    sessionStorage.removeItem(
+        "loggedIn"
+    );
+
+
+    sessionStorage.removeItem(
+        "userRole"
+    );
+
+
+    showPage("login");
+
+
+    return false;
+}
+
+
+/* =========================
+   SAVE MANGA DATA
+========================= */
+
+function saveMangaData() {
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(mangaData)
+    );
+}
+
+
+/* =========================
+   CREATE MANGA ID
+========================= */
+
+function createMangaId(title) {
+
+    const baseId =
+        title
+            .toLowerCase()
+            .trim()
+            .replace(
+                /[^a-z0-9]+/g,
+                "-"
+            )
+            .replace(
+                /^-+|-+$/g,
+                ""
+            );
+
+
+    let newId =
+        baseId || "manga";
+
+
+    const idExists =
+        mangaData.some(
+            function (manga) {
+                return manga.id === newId;
+            }
+        );
+
+
+    if (idExists) {
+
+        newId =
+            newId +
+            "-" +
+            Date.now();
+
+    }
+
+
+    return newId;
+}
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHTML(value) {
+
+    return String(value || "")
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
         );
 }
 
-.hero-content {
-    width: min(760px, 100%);
-    text-align: center;
-}
 
-.hero-small {
-    margin-bottom: 8px;
+/* =========================
+   FIND MANGA
+========================= */
 
-    color: var(--accent-dark);
-    font-size: 0.82rem;
-    font-weight: 800;
-    letter-spacing: 0.16em;
-}
+function findManga(mangaId) {
 
-.hero h1 {
-    margin: 0 0 12px;
+    return mangaData.find(
+        function (manga) {
 
-    font-size: clamp(2.5rem, 7vw, 4.5rem);
-    line-height: 1.05;
-}
+            return manga.id === mangaId;
 
-.hero p:not(.hero-small) {
-    margin: 0 auto 28px;
+        }
+    );
 
-    max-width: 560px;
-
-    color: var(--muted);
-    font-size: 1.05rem;
 }
 
 
-/* ====================
-   BUTTONS
-==================== */
+/* =========================
+   MANGA CARD
+========================= */
 
-.primary-btn,
-.secondary-btn,
-.danger-btn {
-    border: none;
-    border-radius: 14px;
+function createMangaCard(manga) {
 
-    padding: 12px 20px;
+    const safeTitle =
+        escapeHTML(manga.title);
 
-    font-weight: 700;
+    const safeGenre =
+        escapeHTML(manga.genre);
 
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
-}
+    const safeCover =
+        escapeHTML(manga.coverImage);
 
-.primary-btn {
-    background: var(--accent);
-    color: #ffffff;
 
-    box-shadow:
-        0 8px 20px rgba(255, 159, 189, 0.28);
-}
+    return `
+        <article
+            class="manga-card"
+            data-title="${safeTitle}"
+            onclick="openManga('${manga.id}')">
 
-.primary-btn:hover {
-    background: var(--accent-dark);
+            <div class="cover">
 
-    transform: translateY(-2px);
+                <img
+                    src="${safeCover}"
+                    alt="${safeTitle} manga cover">
 
-    box-shadow:
-        0 12px 24px rgba(255, 159, 189, 0.34);
-}
+            </div>
 
-.secondary-btn {
-    background: var(--secondary);
-    color: #39465a;
-}
+            <div class="card-content">
 
-.secondary-btn:hover {
-    transform: translateY(-2px);
-}
+                <h3>
+                    ${safeTitle}
+                </h3>
 
-.danger-btn {
-    background: var(--danger);
-    color: #ffffff;
-}
+                <p>
+                    ${safeGenre}
+                </p>
 
-.danger-btn:hover {
-    background: var(--danger-dark);
-    transform: translateY(-2px);
+            </div>
+
+        </article>
+    `;
 }
 
 
-/* ====================
-   SECTIONS
-==================== */
+/* =========================
+   HOME MANGA
+========================= */
 
-.section {
-    width: min(1120px, calc(100% - 40px));
+function renderHomeManga() {
 
-    margin: 0 auto;
-    padding: 60px 0;
-}
-
-.section-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    margin-bottom: 26px;
-}
-
-.section-label {
-    margin: 0 0 5px;
-
-    color: var(--accent-dark);
-    font-size: 0.78rem;
-    font-weight: 800;
-    letter-spacing: 0.14em;
-}
-
-.section-heading h2 {
-    margin: 0;
-}
+    const homeGrid =
+        document.getElementById(
+            "homeMangaGrid"
+        );
 
 
-/* ====================
-   MANGA GRID
-==================== */
+    if (!homeGrid) {
+        return;
+    }
 
-.manga-grid {
-    display: grid;
 
-    grid-template-columns:
-        repeat(4, minmax(0, 1fr));
+    homeGrid.innerHTML =
+        mangaData
+            .slice(0, 4)
+            .map(createMangaCard)
+            .join("");
 
-    gap: 22px;
-}
 
-.manga-card {
-    overflow: hidden;
+    if (mangaData.length === 0) {
 
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 18px;
+        homeGrid.innerHTML = `
+            <p class="admin-empty">
+                No manga available yet.
+            </p>
+        `;
 
-    box-shadow: var(--shadow);
-
-    cursor: pointer;
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
-}
-
-.manga-card:hover {
-    transform: translateY(-5px);
-
-    background: var(--card-hover);
-
-    box-shadow: var(--shadow-hover);
-}
-
-.cover {
-    width: 100%;
-    aspect-ratio: 3 / 4;
-
-    overflow: hidden;
-
-    background: var(--surface);
-}
-
-.cover img {
-    display: block;
-
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
-}
-
-.card-content {
-    padding: 16px;
-}
-
-.card-content h3 {
-    margin: 0 0 5px;
-
-    font-size: 1rem;
-}
-
-.card-content p {
-    margin: 0;
-
-    color: var(--muted);
-    font-size: 0.88rem;
+    }
 }
 
 
-/* ====================
+/* =========================
+   LIBRARY MANGA
+========================= */
+
+function renderLibraryManga() {
+
+    const libraryGrid =
+        document.getElementById(
+            "libraryGrid"
+        );
+
+
+    if (!libraryGrid) {
+        return;
+    }
+
+
+    libraryGrid.innerHTML =
+        mangaData
+            .map(createMangaCard)
+            .join("");
+
+
+    if (mangaData.length === 0) {
+
+        libraryGrid.innerHTML = `
+            <p class="admin-empty">
+                No manga available yet.
+            </p>
+        `;
+
+    }
+
+
+    searchManga();
+}
+
+
+/* =========================
+   MANGA DETAIL
+========================= */
+
+function openManga(mangaId) {
+
+    const manga =
+        findManga(mangaId);
+
+
+    if (!manga) {
+        return;
+    }
+
+
+    currentManga =
+        manga.id;
+
+
+    currentChapter = 1;
+
+
+    const detailTitle =
+        document.getElementById(
+            "detailTitle"
+        );
+
+
+    const detailGenre =
+        document.getElementById(
+            "detailGenre"
+        );
+
+
+    const detailDescription =
+        document.getElementById(
+            "detailDescription"
+        );
+
+
+    const detailCoverImage =
+        document.getElementById(
+            "detailCoverImage"
+        );
+
+
+    const detailStatus =
+        document.getElementById(
+            "detailStatus"
+        );
+
+
+    if (detailTitle) {
+
+        detailTitle.textContent =
+            manga.title;
+
+    }
+
+
+    if (detailGenre) {
+
+        detailGenre.textContent =
+            manga.genre;
+
+    }
+
+
+    if (detailDescription) {
+
+        detailDescription.textContent =
+            manga.description;
+
+    }
+
+
+    if (detailCoverImage) {
+
+        detailCoverImage.src =
+            manga.coverImage;
+
+        detailCoverImage.alt =
+            manga.title +
+            " manga cover";
+
+    }
+
+
+    if (detailStatus) {
+
+        detailStatus.textContent =
+            manga.status ||
+            "Ongoing";
+
+    }
+
+
+    showPage("detail");
+}
+
+
+/* =========================
+   MANGA READER
+========================= */
+
+function openReader(chapterNumber) {
+
+    currentChapter =
+        chapterNumber;
+
+
+    const manga =
+        findManga(currentManga);
+
+
+    const readerTitle =
+        document.getElementById(
+            "readerTitle"
+        );
+
+
+    if (
+        readerTitle &&
+        manga
+    ) {
+
+        readerTitle.textContent =
+            manga.title +
+            " — Chapter " +
+            currentChapter;
+
+    }
+
+
+    showPage("reader");
+}
+
+
+/* =========================
+   PREVIOUS CHAPTER
+========================= */
+
+function previousChapter() {
+
+    if (currentChapter > 1) {
+
+        currentChapter--;
+
+
+        const manga =
+            findManga(currentManga);
+
+
+        const readerTitle =
+            document.getElementById(
+                "readerTitle"
+            );
+
+
+        if (
+            readerTitle &&
+            manga
+        ) {
+
+            readerTitle.textContent =
+                manga.title +
+                " — Chapter " +
+                currentChapter;
+
+        }
+
+    }
+}
+
+
+/* =========================
+   NEXT CHAPTER
+========================= */
+
+function nextChapter() {
+
+    if (currentChapter < 3) {
+
+        currentChapter++;
+
+
+        const manga =
+            findManga(currentManga);
+
+
+        const readerTitle =
+            document.getElementById(
+                "readerTitle"
+            );
+
+
+        if (
+            readerTitle &&
+            manga
+        ) {
+
+            readerTitle.textContent =
+                manga.title +
+                " — Chapter " +
+                currentChapter;
+
+        }
+
+    }
+}
+
+
+/* =========================
    SEARCH
-==================== */
+========================= */
 
-.search-wrapper {
-    display: flex;
-    align-items: center;
+function searchManga() {
 
-    width: min(620px, 100%);
-
-    margin-bottom: 28px;
-    padding: 0 14px;
-
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-}
-
-.search-icon {
-    margin-right: 8px;
-}
-
-.search-wrapper input {
-    width: 100%;
-
-    padding: 13px 8px;
-
-    border: none;
-    outline: none;
-
-    background: transparent;
-    color: var(--text);
-}
-
-.search-wrapper input::placeholder {
-    color: var(--muted);
-}
+    const searchInput =
+        document.getElementById(
+            "searchInput"
+        );
 
 
-/* ====================
-   DETAIL PAGE
-==================== */
+    const libraryGrid =
+        document.getElementById(
+            "libraryGrid"
+        );
 
-.detail-section {
-    width: min(1120px, calc(100% - 40px));
 
-    margin: 0 auto;
-    padding: 50px 0 70px;
-}
+    if (
+        !searchInput ||
+        !libraryGrid
+    ) {
+        return;
+    }
 
-.back-btn {
-    margin-bottom: 30px;
 
-    border: none;
-    background: transparent;
+    const searchText =
+        searchInput.value
+            .toLowerCase()
+            .trim();
 
-    color: var(--muted);
-    font-weight: 700;
 
-    cursor: pointer;
-}
+    const mangaCards =
+        libraryGrid.querySelectorAll(
+            ".manga-card"
+        );
 
-.back-btn:hover {
-    color: var(--accent-dark);
-}
 
-.detail-layout {
-    display: grid;
+    mangaCards.forEach(
+        function (card) {
 
-    grid-template-columns:
-        minmax(250px, 340px) 1fr;
+            const title =
+                (
+                    card.dataset.title ||
+                    ""
+                )
+                    .toLowerCase();
 
-    gap: 50px;
 
-    align-items: start;
-}
+            if (
+                title.includes(
+                    searchText
+                )
+            ) {
 
-.detail-cover {
-    overflow: hidden;
+                card.style.display =
+                    "";
 
-    border-radius: 20px;
+            } else {
 
-    background: var(--surface);
+                card.style.display =
+                    "none";
 
-    box-shadow: var(--shadow);
-}
+            }
 
-.detail-cover img {
-    display: block;
-
-    width: 100%;
-    height: auto;
-}
-
-.detail-info {
-    padding-top: 5px;
-}
-
-.detail-genre {
-    margin: 0 0 8px;
-
-    color: var(--accent-dark);
-    font-weight: 800;
-}
-
-.detail-info h1 {
-    margin: 0 0 16px;
-
-    font-size: clamp(2rem, 5vw, 3.2rem);
-}
-
-.detail-description {
-    max-width: 650px;
-
-    margin-bottom: 24px;
-
-    color: var(--muted);
-}
-
-.status-box {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-
-    margin-bottom: 34px;
-    padding: 10px 14px;
-
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-}
-
-.status-label {
-    color: var(--muted);
-}
-
-.status-value {
-    color: var(--accent-dark);
-    font-weight: 800;
+        }
+    );
 }
 
 
-/* ====================
-   CHAPTERS
-==================== */
+/* =========================
+   DARK MODE
+========================= */
 
-.chapter-section h2 {
-    margin-bottom: 16px;
-}
+function toggleTheme() {
 
-.chapter-list {
-    display: grid;
-    gap: 12px;
-}
-
-.chapter-btn {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    width: 100%;
-
-    padding: 15px 17px;
-
-    border: 1px solid var(--border);
-    border-radius: 14px;
-
-    background: var(--card);
-    color: var(--text);
-
-    text-align: left;
-
-    transition:
-        background 0.2s ease,
-        transform 0.2s ease;
-}
-
-.chapter-btn:hover {
-    background: var(--card-hover);
-    transform: translateX(3px);
-}
-
-.chapter-btn span:last-child {
-    color: var(--accent-dark);
-    font-weight: 700;
-}
+    const html =
+        document.documentElement;
 
 
-/* ====================
-   READER
-==================== */
+    const currentTheme =
+        html.getAttribute(
+            "data-theme"
+        );
 
-.reader-section {
-    width: min(900px, calc(100% - 30px));
 
-    margin: 0 auto;
-    padding: 40px 0 70px;
-}
+    if (
+        currentTheme === "dark"
+    ) {
 
-.reader-top {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+        html.setAttribute(
+            "data-theme",
+            "light"
+        );
 
-    margin-bottom: 28px;
-}
+        localStorage.setItem(
+            "mangaverseTheme",
+            "light"
+        );
 
-.reader-top .back-btn {
-    margin: 0;
-}
+    } else {
 
-.reader-top h1 {
-    margin: 0;
+        html.setAttribute(
+            "data-theme",
+            "dark"
+        );
 
-    font-size: clamp(1.3rem, 4vw, 2rem);
-}
+        localStorage.setItem(
+            "mangaverseTheme",
+            "dark"
+        );
 
-.reader-content {
-    display: grid;
-    gap: 18px;
-}
-
-.manga-panel {
-    overflow: hidden;
-
-    min-height: 300px;
-
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-
-    box-shadow: var(--shadow);
-}
-
-.panel-placeholder {
-    min-height: 300px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    color: var(--muted);
-    font-weight: 700;
-}
-
-.reader-controls {
-    display: flex;
-    justify-content: space-between;
-
-    gap: 15px;
-
-    margin-top: 28px;
+    }
 }
 
 
-/* ====================
-   LOGIN
-==================== */
+/* =========================
+   LOAD THEME
+========================= */
 
-.login-section {
-    min-height: calc(100vh - 80px);
+function loadTheme() {
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    const savedTheme =
+        localStorage.getItem(
+            "mangaverseTheme"
+        );
 
-    padding: 40px 20px;
-}
 
-.login-card {
-    width: min(430px, 100%);
+    if (savedTheme === "dark") {
 
-    padding: 36px;
+        document.documentElement.setAttribute(
+            "data-theme",
+            "dark"
+        );
 
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 24px;
+    } else {
 
-    box-shadow: var(--shadow);
-}
+        document.documentElement.setAttribute(
+            "data-theme",
+            "light"
+        );
 
-.login-card h1 {
-    margin: 8px 0 10px;
-
-    line-height: 1.2;
-}
-
-.login-description {
-    margin: 0 0 28px;
-
-    color: var(--muted);
-}
-
-.login-card label {
-    display: block;
-
-    margin: 16px 0 8px;
-
-    font-weight: 700;
-}
-
-.login-card input {
-    width: 100%;
-
-    padding: 13px 15px;
-
-    border: 1px solid var(--border);
-    border-radius: 12px;
-
-    background: var(--surface);
-    color: var(--text);
-
-    outline: none;
-}
-
-.login-card input:focus {
-    border-color: var(--accent);
-}
-
-.login-btn {
-    width: 100%;
-
-    margin-top: 18px;
-}
-
-.login-message {
-    min-height: 20px;
-
-    margin: 12px 0 0;
-
-    color: var(--accent-dark);
-    font-size: 0.9rem;
-}
-
-.demo-account {
-    margin: 22px 0 0;
-
-    color: var(--muted);
-
-    text-align: center;
-
-    font-size: 0.85rem;
-
-    line-height: 1.8;
+    }
 }
 
 
-/* ====================
+/* =========================
    ADMIN DASHBOARD
-==================== */
+========================= */
 
-.admin-info {
-    display: grid;
+function renderAdminDashboard() {
 
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+    const userRole =
+        sessionStorage.getItem(
+            "userRole"
+        );
 
-    gap: 18px;
 
-    margin-bottom: 28px;
-}
+    if (userRole !== "admin") {
+        return;
+    }
 
-.admin-stat {
-    padding: 22px;
 
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 18px;
+    renderAdminMangaList();
 
-    box-shadow: var(--shadow);
-}
-
-.admin-stat-label {
-    display: block;
-
-    margin-bottom: 5px;
-
-    color: var(--muted);
-    font-size: 0.88rem;
-}
-
-.admin-stat strong {
-    display: block;
-
-    color: var(--accent-dark);
-
-    font-size: 2rem;
-    line-height: 1.2;
+    updateAdminMangaCount();
 }
 
 
-/* ====================
-   ADMIN CARDS
-==================== */
+/* =========================
+   ADMIN MANGA COUNT
+========================= */
 
-.admin-card {
-    margin-bottom: 28px;
-    padding: 28px;
+function updateAdminMangaCount() {
 
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
+    const countElement =
+        document.getElementById(
+            "adminMangaCount"
+        );
 
-    box-shadow: var(--shadow);
-}
 
-.admin-card-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    if (!countElement) {
+        return;
+    }
 
-    margin-bottom: 22px;
-}
 
-.admin-card-heading h2 {
-    margin: 0;
+    countElement.textContent =
+        mangaData.length;
 }
 
 
-/* ====================
-   ADMIN FORM
-==================== */
-
-#mangaForm {
-    display: grid;
-    gap: 0;
-}
-
-#mangaForm label {
-    display: block;
-
-    margin: 16px 0 8px;
-
-    font-weight: 700;
-}
-
-#mangaForm input,
-#mangaForm textarea,
-#mangaForm select {
-    width: 100%;
-
-    padding: 13px 15px;
-
-    border: 1px solid var(--border);
-    border-radius: 12px;
-
-    background: var(--surface);
-    color: var(--text);
-
-    outline: none;
-
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-#mangaForm textarea {
-    resize: vertical;
-
-    min-height: 120px;
-}
-
-#mangaForm input::placeholder,
-#mangaForm textarea::placeholder {
-    color: var(--muted);
-}
-
-#mangaForm input:focus,
-#mangaForm textarea:focus,
-#mangaForm select:focus {
-    border-color: var(--accent);
-
-    box-shadow:
-        0 0 0 3px rgba(255, 159, 189, 0.12);
-}
-
-.admin-form-buttons {
-    display: flex;
-    flex-wrap: wrap;
-
-    gap: 12px;
-
-    margin-top: 24px;
-}
-
-.admin-form-buttons button {
-    min-width: 130px;
-}
-
-
-/* ====================
+/* =========================
    ADMIN MANGA LIST
-==================== */
+========================= */
 
-.admin-manga-list {
-    display: grid;
-    gap: 14px;
-}
+function renderAdminMangaList() {
 
-.admin-manga-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    gap: 18px;
-
-    padding: 16px;
-
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-
-    transition:
-        background 0.2s ease,
-        border-color 0.2s ease;
-}
-
-.admin-manga-item:hover {
-    background: var(--card-hover);
-}
-
-.admin-manga-info {
-    min-width: 0;
-
-    display: flex;
-    align-items: center;
-
-    gap: 14px;
-}
-
-.admin-manga-cover {
-    flex: 0 0 58px;
-
-    width: 58px;
-    height: 76px;
-
-    overflow: hidden;
-
-    border-radius: 10px;
-
-    background: var(--card);
-
-    border: 1px solid var(--border);
-}
-
-.admin-manga-cover img {
-    display: block;
-
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
-}
-
-.admin-manga-text {
-    min-width: 0;
-}
-
-.admin-manga-text h3 {
-    overflow: hidden;
-
-    margin: 0 0 3px;
-
-    font-size: 1rem;
-
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.admin-manga-text p {
-    margin: 0;
-
-    color: var(--muted);
-    font-size: 0.84rem;
-}
-
-.admin-manga-status {
-    display: inline-block;
-
-    margin-top: 5px;
-
-    color: var(--accent-dark);
-
-    font-size: 0.78rem;
-    font-weight: 700;
-}
-
-.admin-manga-actions {
-    flex-shrink: 0;
-
-    display: flex;
-    align-items: center;
-
-    gap: 8px;
-}
-
-.admin-manga-actions button {
-    padding: 9px 13px;
-
-    border-radius: 10px;
-
-    font-size: 0.84rem;
-}
+    const adminList =
+        document.getElementById(
+            "adminMangaList"
+        );
 
 
-/* ====================
-   ADMIN EMPTY STATE
-==================== */
+    if (!adminList) {
+        return;
+    }
 
-.admin-empty {
-    padding: 30px 20px;
 
-    border: 1px dashed var(--border);
-    border-radius: 14px;
+    if (mangaData.length === 0) {
 
-    color: var(--muted);
+        adminList.innerHTML = `
+            <div class="admin-empty">
+                No manga available.
+                Add your first manga above.
+            </div>
+        `;
 
-    text-align: center;
+        return;
+    }
+
+
+    adminList.innerHTML =
+        mangaData
+            .map(
+                function (manga) {
+
+                    const safeTitle =
+                        escapeHTML(
+                            manga.title
+                        );
+
+
+                    const safeGenre =
+                        escapeHTML(
+                            manga.genre
+                        );
+
+
+                    const safeStatus =
+                        escapeHTML(
+                            manga.status ||
+                            "Ongoing"
+                        );
+
+
+                    const safeCover =
+                        escapeHTML(
+                            manga.coverImage
+                        );
+
+
+                    return `
+                        <div
+                            class="admin-manga-item">
+
+                            <div
+                                class="admin-manga-info">
+
+                                <div
+                                    class="admin-manga-cover">
+
+                                    <img
+                                        src="${safeCover}"
+                                        alt="${safeTitle}">
+
+                                </div>
+
+
+                                <div
+                                    class="admin-manga-text">
+
+                                    <h3>
+                                        ${safeTitle}
+                                    </h3>
+
+                                    <p>
+                                        ${safeGenre}
+                                    </p>
+
+                                    <span
+                                        class="admin-manga-status">
+                                        ${safeStatus}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="admin-manga-actions">
+
+                                <button
+                                    type="button"
+                                    class="secondary-btn"
+                                    onclick="editManga('${manga.id}')">
+                                    Edit
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="danger-btn"
+                                    onclick="deleteManga('${manga.id}')">
+                                    Delete
+                                </button>
+
+                            </div>
+
+                        </div>
+                    `;
+
+                }
+            )
+            .join("");
 }
 
 
-/* ====================
-   BUNNY
-==================== */
+/* =========================
+   SAVE / ADD / EDIT MANGA
+========================= */
 
-.bunny-mascot {
-    position: fixed;
+function saveManga(event) {
 
-    left: 0;
-    bottom: 4px;
-
-    z-index: 900;
-
-    width: 58px;
-    height: 58px;
-
-    pointer-events: none;
-
-    animation:
-        bunny-hop 0.9s ease-in-out infinite,
-        bunny-walk 14s linear infinite;
-}
-
-.bunny-mascot img {
-    display: block;
-
-    width: 58px;
-    height: 58px;
-
-    object-fit: contain;
-
-    transform-origin: 50% 90%;
-
-    animation:
-        bunny-body 0.9s ease-in-out infinite;
-}
-
-@keyframes bunny-hop {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-8px);
-    }
-}
-
-@keyframes bunny-walk {
-    0% {
-        left: -5px;
-    }
-
-    50% {
-        left: calc(100vw - 58px);
-    }
-
-    100% {
-        left: -5px;
-    }
-}
-
-@keyframes bunny-body {
-    0%,
-    100% {
-        transform: rotate(0deg);
-    }
-
-    25% {
-        transform: rotate(-3deg);
-    }
-
-    75% {
-        transform: rotate(3deg);
-    }
-}
+    event.preventDefault();
 
 
-/* ====================
-   FOOTER
-==================== */
-
-.footer {
-    padding: 28px 20px 35px;
-
-    color: var(--muted);
-
-    text-align: center;
-
-    font-size: 0.85rem;
-}
+    const titleInput =
+        document.getElementById(
+            "mangaTitleInput"
+        );
 
 
-/* ====================
-   TABLET
-==================== */
-
-@media (max-width: 900px) {
-
-    .manga-grid {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-    }
-
-    .detail-layout {
-        grid-template-columns:
-            minmax(220px, 300px) 1fr;
-
-        gap: 30px;
-    }
-
-    .admin-info {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-    }
-}
+    const genreInput =
+        document.getElementById(
+            "mangaGenreInput"
+        );
 
 
-/* ====================
-   MOBILE
-==================== */
+    const descriptionInput =
+        document.getElementById(
+            "mangaDescriptionInput"
+        );
 
-@media (max-width: 640px) {
 
-    .navbar {
-        padding: 13px 15px;
-    }
+    const coverInput =
+        document.getElementById(
+            "mangaCoverInput"
+        );
 
-    .nav-right {
-        gap: 2px;
-    }
 
-    .nav-btn,
-    .theme-btn {
-        padding: 7px 6px;
+    const statusInput =
+        document.getElementById(
+            "mangaStatusInput"
+        );
 
-        font-size: 0.82rem;
-    }
 
-    .logo {
-        font-size: 1.05rem;
-    }
+    const editIdInput =
+        document.getElementById(
+            "editMangaId"
+        );
 
-    .hero {
-        min-height: 380px;
 
-        padding: 50px 18px;
-    }
-
-    .section,
-    .detail-section {
-        width: min(100% - 30px, 1120px);
-    }
-
-    .section {
-        padding: 45px 0;
-    }
-
-    .manga-grid {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-
-        gap: 14px;
-    }
-
-    .card-content {
-        padding: 12px;
-    }
-
-    .card-content h3 {
-        font-size: 0.9rem;
-    }
-
-    .card-content p {
-        font-size: 0.78rem;
-    }
-
-    .detail-layout {
-        grid-template-columns: 1fr;
-
-        gap: 28px;
-    }
-
-    .detail-cover {
-        width: min(280px, 100%);
-
-        margin: 0 auto;
-    }
-
-    .detail-info h1 {
-        font-size: 2rem;
-    }
-
-    .reader-top {
-        align-items: flex-start;
-
-        flex-direction: column;
-
-        gap: 8px;
-    }
-
-    .reader-top .back-btn {
-        margin-bottom: 0;
-    }
-
-    .reader-controls {
-        flex-direction: column;
-    }
-
-    .reader-controls button {
-        width: 100%;
-    }
-
-    .login-card {
-        padding: 28px 22px;
+    if (
+        !titleInput ||
+        !genreInput ||
+        !descriptionInput ||
+        !coverInput ||
+        !statusInput ||
+        !editIdInput
+    ) {
+        return false;
     }
 
 
-    /* ADMIN MOBILE */
+    const title =
+        titleInput.value.trim();
 
-    .admin-info {
-        grid-template-columns: 1fr;
 
-        gap: 12px;
-    }
+    const genre =
+        genreInput.value.trim();
 
-    .admin-card {
-        padding: 22px 18px;
 
-        border-radius: 18px;
-    }
+    const description =
+        descriptionInput.value.trim();
 
-    .admin-card-heading {
-        align-items: flex-start;
 
-        margin-bottom: 18px;
-    }
+    const coverImage =
+        coverInput.value.trim();
 
-    .admin-form-buttons {
-        flex-direction: column;
-    }
 
-    .admin-form-buttons button {
-        width: 100%;
-    }
+    const status =
+        statusInput.value;
 
-    .admin-manga-item {
-        align-items: flex-start;
 
-        flex-direction: column;
-    }
+    const editId =
+        editIdInput.value;
 
-    .admin-manga-info {
-        width: 100%;
-    }
 
-    .admin-manga-actions {
-        width: 100%;
-    }
+    if (
+        !title ||
+        !genre ||
+        !description ||
+        !coverImage
+    ) {
 
-    .admin-manga-actions button {
-        flex: 1;
+        return false;
+
     }
 
 
-    /* BUNNY */
+    /* -------------------------
+       EDIT EXISTING MANGA
+    ------------------------- */
 
-    .bunny-mascot {
-        width: 48px;
-        height: 48px;
-    }
+    if (editId) {
 
-    .bunny-mascot img {
-        width: 48px;
-        height: 48px;
-    }
+        const manga =
+            findManga(editId);
 
-    @keyframes bunny-walk {
-        0% {
-            left: -5px;
+
+        if (manga) {
+
+            manga.title =
+                title;
+
+            manga.genre =
+                genre;
+
+            manga.description =
+                description;
+
+            manga.coverImage =
+                coverImage;
+
+            manga.status =
+                status;
+
         }
 
-        50% {
-            left: calc(100vw - 48px);
-        }
+    }
 
-        100% {
-            left: -5px;
-        }
+
+    /* -------------------------
+       ADD NEW MANGA
+    ------------------------- */
+
+    else {
+
+        const newManga = {
+
+            id:
+                createMangaId(
+                    title
+                ),
+
+            title:
+                title,
+
+            genre:
+                genre,
+
+            description:
+                description,
+
+            coverImage:
+                coverImage,
+
+            status:
+                status
+
+        };
+
+
+        mangaData.push(
+            newManga
+        );
+
+    }
+
+
+    saveMangaData();
+
+
+    resetMangaForm();
+
+
+    renderHomeManga();
+
+    renderLibraryManga();
+
+    renderAdminDashboard();
+
+
+    return false;
+}
+
+
+/* =========================
+   EDIT MANGA
+========================= */
+
+function editManga(mangaId) {
+
+    const manga =
+        findManga(mangaId);
+
+
+    if (!manga) {
+        return;
+    }
+
+
+    const titleInput =
+        document.getElementById(
+            "mangaTitleInput"
+        );
+
+
+    const genreInput =
+        document.getElementById(
+            "mangaGenreInput"
+        );
+
+
+    const descriptionInput =
+        document.getElementById(
+            "mangaDescriptionInput"
+        );
+
+
+    const coverInput =
+        document.getElementById(
+            "mangaCoverInput"
+        );
+
+
+    const statusInput =
+        document.getElementById(
+            "mangaStatusInput"
+        );
+
+
+    const editIdInput =
+        document.getElementById(
+            "editMangaId"
+        );
+
+
+    const formTitle =
+        document.getElementById(
+            "adminFormTitle"
+        );
+
+
+    const saveButton =
+        document.getElementById(
+            "saveMangaBtn"
+        );
+
+
+    const cancelButton =
+        document.getElementById(
+            "cancelEditBtn"
+        );
+
+
+    if (
+        !titleInput ||
+        !genreInput ||
+        !descriptionInput ||
+        !coverInput ||
+        !statusInput ||
+        !editIdInput
+    ) {
+        return;
+    }
+
+
+    titleInput.value =
+        manga.title;
+
+
+    genreInput.value =
+        manga.genre;
+
+
+    descriptionInput.value =
+        manga.description;
+
+
+    coverInput.value =
+        manga.coverImage;
+
+
+    statusInput.value =
+        manga.status ||
+        "Ongoing";
+
+
+    editIdInput.value =
+        manga.id;
+
+
+    if (formTitle) {
+
+        formTitle.textContent =
+            "Edit Manga";
+
+    }
+
+
+    if (saveButton) {
+
+        saveButton.textContent =
+            "Save Changes";
+
+    }
+
+
+    if (cancelButton) {
+
+        cancelButton.style.display =
+            "";
+
+    }
+
+
+    showPage("admin");
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+/* =========================
+   DELETE MANGA
+========================= */
+
+function deleteManga(mangaId) {
+
+    const manga =
+        findManga(mangaId);
+
+
+    if (!manga) {
+        return;
+    }
+
+
+    const confirmed =
+        window.confirm(
+            'Delete "' +
+            manga.title +
+            '"?'
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    mangaData =
+        mangaData.filter(
+            function (item) {
+
+                return item.id !== mangaId;
+
+            }
+        );
+
+
+    saveMangaData();
+
+
+    if (
+        currentManga === mangaId
+    ) {
+
+        currentManga =
+            mangaData.length > 0
+                ? mangaData[0].id
+                : "";
+
+        currentChapter = 1;
+
+    }
+
+
+    renderHomeManga();
+
+    renderLibraryManga();
+
+    renderAdminDashboard();
+
+
+    resetMangaForm();
+}
+
+
+/* =========================
+   RESET MANGA FORM
+========================= */
+
+function resetMangaForm() {
+
+    const form =
+        document.getElementById(
+            "mangaForm"
+        );
+
+
+    const editIdInput =
+        document.getElementById(
+            "editMangaId"
+        );
+
+
+    const formTitle =
+        document.getElementById(
+            "adminFormTitle"
+        );
+
+
+    const saveButton =
+        document.getElementById(
+            "saveMangaBtn"
+        );
+
+
+    const cancelButton =
+        document.getElementById(
+            "cancelEditBtn"
+        );
+
+
+    if (form) {
+        form.reset();
+    }
+
+
+    if (editIdInput) {
+
+        editIdInput.value =
+            "";
+
+    }
+
+
+    if (formTitle) {
+
+        formTitle.textContent =
+            "Add New Manga";
+
+    }
+
+
+    if (saveButton) {
+
+        saveButton.textContent =
+            "Add Manga";
+
+    }
+
+
+    if (cancelButton) {
+
+        cancelButton.style.display =
+            "none";
+
     }
 }
 
 
-/* ====================
-   SMALL MOBILE
-==================== */
+/* =========================
+   CANCEL EDIT
+========================= */
 
-@media (max-width: 420px) {
+function cancelEditManga() {
 
-    .navbar {
-        padding: 11px 10px;
-    }
+    resetMangaForm();
 
-    .nav-right {
-        gap: 0;
-    }
-
-    .nav-btn,
-    .theme-btn {
-        padding: 6px 4px;
-
-        font-size: 0.74rem;
-    }
-
-    .logo {
-        font-size: 0.95rem;
-    }
-
-    .manga-grid {
-        gap: 10px;
-    }
-
-    .login-card {
-        padding: 24px 18px;
-    }
-
-    .admin-card {
-        padding: 20px 15px;
-    }
-
-    .admin-manga-info {
-        align-items: flex-start;
-    }
-
-    .admin-manga-cover {
-        flex-basis: 50px;
-
-        width: 50px;
-        height: 66px;
-    }
-
-    .admin-manga-text h3 {
-        font-size: 0.9rem;
-    }
-
-    .admin-manga-actions {
-        flex-direction: column;
-    }
-
-    .admin-manga-actions button {
-        width: 100%;
-    }
-
-    .bunny-mascot {
-        width: 44px;
-        height: 44px;
-    }
-
-    .bunny-mascot img {
-        width: 44px;
-        height: 44px;
-    }
-
-    @keyframes bunny-walk {
-        0% {
-            left: -5px;
-        }
-
-        50% {
-            left: calc(100vw - 44px);
-        }
-
-        100% {
-            left: -5px;
-        }
-    }
 }
+
+
+/* =========================
+   PAGE START
+========================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        loadTheme();
+
+
+        renderHomeManga();
+
+        renderLibraryManga();
+
+        renderAdminDashboard();
+
+
+        const loggedIn =
+            sessionStorage.getItem(
+                "loggedIn"
+            );
+
+
+        const userRole =
+            sessionStorage.getItem(
+                "userRole"
+            );
+
+
+        updateNavigation();
+
+
+        if (loggedIn !== "true") {
+
+            showPage("login");
+
+        } else if (
+            userRole === "admin"
+        ) {
+
+            showPage("admin");
+
+        } else {
+
+            showPage("home");
+
+        }
+
+    }
+);
