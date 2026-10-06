@@ -3,461 +3,734 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>MangaVerse</title>
+
     <link rel="stylesheet" href="style.css?v=3">
 </head>
+
 <body>
-<nav class="navbar">
-    <div class="nav-left">
-        <button class="logo" onclick="showPage('home')">
-            MangaVerse
-        </button>
-    </div>
-<div class="nav-right">
-    <button class="nav-btn" onclick="showPage('home')">
-        Home
-    </button>
-    <button class="nav-btn" onclick="showPage('library')">
-        Library
-    </button>
-    <button class="nav-btn" onclick="logoutUser()">
-        Logout
-    </button>
-    <button
-        class="theme-btn"
-        onclick="toggleTheme()"
-        aria-label="Toggle theme"
-    >
-        ☾
-    </button>
-</div>
-</nav>
-<!-- ==================== LOGIN PAGE ==================== -->
-<main id="loginPage" class="page">
-<section class="login-section">
-    <div class="login-card">
-        <p class="section-label">
-            ✦ WELCOME BACK
-        </p>
-        <h1>Login to MangaVerse</h1>
-        <p class="login-description">
-            Sign in to continue reading your favorite manga.
-        </p>
-        <form onsubmit="loginUser(event)">
-            <label for="usernameInput">
-                Username
-            </label>
-            <input
-                type="text"
-                id="usernameInput"
-                placeholder="Enter username"
-                required
-            >
-            <label for="passwordInput">
-                Password
-            </label>
-            <input
-                type="password"
-                id="passwordInput"
-                placeholder="Enter password"
-                required
-            >
-            <p
-                id="loginMessage"
-                class="login-message"
-            ></p>
+
+    <!-- =========================
+         NAVIGATION BAR
+    ========================== -->
+
+    <nav class="navbar">
+
+        <div class="nav-left">
             <button
-                type="submit"
-                class="primary-btn login-btn"
-            >
-                Login
+                type="button"
+                class="logo"
+                onclick="showPage('home')">
+                MangaVerse
             </button>
-        </form>
-        <p class="demo-account">
-            Demo account:
-            <strong>admin</strong>
-            /
-            <strong>1234</strong>
-        </p>
-    </div>
-</section>
-</main>
-<!-- ==================== HOME PAGE ==================== -->
-<main id="homePage" class="page">
-<section class="hero">
-    <div class="hero-content">
-        <p class="hero-small">
-            WELCOME TO
-        </p>
-        <h1>
-            MangaVerse
-        </h1>
-        <p>
-            Your cozy little corner for reading manga.
-        </p>
-        <button
-            class="primary-btn"
-            onclick="showPage('library')"
-        >
-            Explore Manga
-        </button>
-    </div>
-</section>
-<section class="section">
-    <div class="section-heading">
-        <div>
-            <p class="section-label">
-                ✦ FEATURED
-            </p>
-            <h2>
-                Popular Manga
-            </h2>
         </div>
-    </div>
-    <div class="manga-grid">
-        <article
-            class="manga-card"
-            onclick="openManga('Shadow Eclipse')"
-        >
-            <div class="cover">
-                <img
-                    src="images/shadow-eclipse.JPG"
-                    alt="Shadow Eclipse manga cover"
-                >
-            </div>
-            <div class="card-content">
-                <h3>
-                    Shadow Eclipse
-                </h3>
-                <p>
-                    Action · Fantasy
-                </p>
-            </div>
-        </article>
-        <article
-            class="manga-card"
-            onclick="openManga('Neon Hearts')"
-        >
-            <div class="cover">
-                <img
-                    src="images/neon-hearts.JPG"
-                    alt="Neon Hearts manga cover"
-                >
-            </div>
-            <div class="card-content">
-                <h3>
-                    Neon Hearts
-                </h3>
-                <p>
-                    Romance · Drama
-                </p>
-            </div>
-        </article>
-        <article
-            class="manga-card"
-            onclick="openManga('Crimson Blade')"
-        >
-            <div class="cover">
-                <img
-                    src="images/crimson-blade.JPG"
-                    alt="Crimson Blade manga cover"
-                >
-            </div>
-            <div class="card-content">
-                <h3>
-                    Crimson Blade
-                </h3>
-                <p>
-                    Action · Adventure
-                </p>
-            </div>
-        </article>
-        <article
-            class="manga-card"
-            onclick="openManga('Beyond Tomorrow')"
-        >
-            <div class="cover">
-                <img
-                    src="images/beyond-tomorrow.JPG"
-                    alt="Beyond Tomorrow manga cover"
-                >
-            </div>
-            <div class="card-content">
-                <h3>
-                    Beyond Tomorrow
-                </h3>
-                <p>
-                    Slice of Life · Drama
-                </p>
-            </div>
-        </article>
-    </div>
-</section>
-</main>
-<!-- ==================== LIBRARY PAGE ==================== -->
-<main id="libraryPage" class="page">
-<section class="section">
-    <div class="section-heading">
-        <div>
-            <p class="section-label">
-                ✦ BROWSE
-            </p>
-            <h2>
-                Manga Library
-            </h2>
+
+        <div class="nav-right">
+
+            <button
+                type="button"
+                class="nav-btn"
+                onclick="showPage('home')">
+                Home
+            </button>
+
+            <button
+                type="button"
+                class="nav-btn"
+                onclick="showPage('library')">
+                Library
+            </button>
+
+            <button
+                type="button"
+                class="nav-btn"
+                onclick="logoutUser()">
+                Logout
+            </button>
+
+            <button
+                type="button"
+                class="theme-btn"
+                onclick="toggleTheme()"
+                aria-label="Toggle theme">
+                ☾
+            </button>
+
         </div>
-    </div>
-    <div class="search-wrapper">
-        <span class="search-icon">
-            🔍
-        </span>
-        <input
-            type="text"
-            id="searchInput"
-            placeholder="Search manga..."
-            oninput="searchManga()"
-        >
-    </div>
-    <div
-        id="libraryGrid"
-        class="manga-grid"
-    >
-        <article
-            class="manga-card"
-            data-title="Shadow Eclipse"
-            onclick="openManga('Shadow Eclipse')"
-        >
-            <div class="cover">
-                <img
-                    src="images/shadow-eclipse.JPG"
-                    alt="Shadow Eclipse manga cover"
-                >
-            </div>
-            <div class="card-content">
-                <h3>
-                    Shadow Eclipse
-                </h3>
-                <p>
-                    Action · Fantasy
+
+    </nav>
+
+
+    <!-- =========================
+         LOGIN PAGE
+    ========================== -->
+
+    <main id="loginPage" class="page">
+
+        <section class="login-section">
+
+            <div class="login-card">
+
+                <p class="section-label">
+                    ✦ WELCOME BACK
                 </p>
-            </div>
-        </article>
-        <article
-            class="manga-card"
-            data-title="Neon Hearts"
-            onclick="openManga('Neon Hearts')"
-        >
-            <div class="cover">
-                <img
-                    src="images/neon-hearts.JPG"
-                    alt="Neon Hearts manga cover"
-                >
-            </div>
-            <div class="card-content">
-                <h3>
-                    Neon Hearts
-                </h3>
-                <p>
-                    Romance · Drama
+
+                <h1>
+                    Login to MangaVerse
+                </h1>
+
+                <p class="login-description">
+                    Sign in to continue reading your favorite manga.
                 </p>
-            </div>
-        </article>
-        <article
-            class="manga-card"
-            data-title="Crimson Blade"
-            onclick="openManga('Crimson Blade')"
-        >
-            <div class="cover">
-                <img
-                    src="images/crimson-blade.JPG"
-                    alt="Crimson Blade manga cover"
-                >
-            </div>
-            <div class="card-content">
-                <h3>
-                    Crimson Blade
-                </h3>
-                <p>
-                    Action · Adventure
-                </p>
-            </div>
-        </article>
-        <article
-            class="manga-card"
-            data-title="Beyond Tomorrow"
-            onclick="openManga('Beyond Tomorrow')"
-        >
-            <div class="cover">
-                <img
-                    src="images/beyond-tomorrow.JPG"
-                    alt="Beyond Tomorrow manga cover"
-                >
-            </div>
-            <div class="card-content">
-                <h3>
-                    Beyond Tomorrow
-                </h3>
-                <p>
-                    Slice of Life · Drama
-                </p>
-            </div>
-        </article>
-    </div>
-</section>
-</main>
-<!-- ==================== DETAIL PAGE ==================== -->
-<main id="detailPage" class="page">
-<section class="detail-section">
-    <button
-        class="back-btn"
-        onclick="showPage('library')"
-    >
-        ← Back to Library
-    </button>
-    <div class="detail-layout">
-        <div class="detail-cover">
-            <img
-                id="detailCoverImage"
-                src="images/shadow-eclipse.JPG"
-                alt="Shadow Eclipse manga cover"
-            >
-        </div>
-        <div class="detail-info">
-            <p
-                id="detailGenre"
-                class="detail-genre"
-            >
-                Action · Fantasy
-            </p>
-            <h1 id="detailTitle">
-                Shadow Eclipse
-            </h1>
-            <p
-                id="detailDescription"
-                class="detail-description"
-            >
-                A mysterious story about a young hero who discovers a hidden power connected to the shadows.
-            </p>
-            <div class="status-box">
-                <span class="status-label">
-                    Status
-                </span>
-                <span
-                    id="detailStatus"
-                    class="status-value"
-                >
-                    Ongoing
-                </span>
-            </div>
-            <div class="chapter-section">
-                <h2>
-                    Chapters
-                </h2>
-                <div class="chapter-list">
+
+
+                <form onsubmit="loginUser(event)">
+
+                    <label for="usernameInput">
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        id="usernameInput"
+                        placeholder="Enter username"
+                        autocomplete="username"
+                        required>
+
+
+                    <label for="passwordInput">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="passwordInput"
+                        placeholder="Enter password"
+                        autocomplete="current-password"
+                        required>
+
+
+                    <p
+                        id="loginMessage"
+                        class="login-message">
+                    </p>
+
+
                     <button
-                        class="chapter-btn"
-                        onclick="openReader(1)"
-                    >
-                        <span>
-                            Chapter 1
-                        </span>
-                        <span>
-                            Read →
-                        </span>
+                        type="submit"
+                        class="primary-btn login-btn">
+                        Login
                     </button>
-                    <button
-                        class="chapter-btn"
-                        onclick="openReader(2)"
-                    >
-                        <span>
-                            Chapter 2
-                        </span>
-                        <span>
-                            Read →
-                        </span>
-                    </button>
-                    <button
-                        class="chapter-btn"
-                        onclick="openReader(3)"
-                    >
-                        <span>
-                            Chapter 3
-                        </span>
-                        <span>
-                            Read →
-                        </span>
-                    </button>
+
+                </form>
+
+
+                <p class="demo-account">
+                    Demo account:
+                    <strong>admin</strong>
+                    /
+                    <strong>1234</strong>
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         HOME PAGE
+    ========================== -->
+
+    <main id="homePage" class="page">
+
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <p class="hero-small">
+                    WELCOME TO
+                </p>
+
+                <h1>
+                    MangaVerse
+                </h1>
+
+                <p>
+                    Your cozy little corner for reading manga.
+                </p>
+
+                <button
+                    type="button"
+                    class="primary-btn"
+                    onclick="showPage('library')">
+                    Explore Manga
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <section class="section">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <p class="section-label">
+                        ✦ FEATURED
+                    </p>
+
+                    <h2>
+                        Popular Manga
+                    </h2>
+
                 </div>
+
             </div>
-        </div>
+
+
+            <div class="manga-grid">
+
+
+                <!-- Shadow Eclipse -->
+
+                <article
+                    class="manga-card"
+                    onclick="openManga('Shadow Eclipse')">
+
+                    <div class="cover">
+
+                        <img
+                            src="images/shadow-eclipse.JPG"
+                            alt="Shadow Eclipse manga cover">
+
+                    </div>
+
+                    <div class="card-content">
+
+                        <h3>
+                            Shadow Eclipse
+                        </h3>
+
+                        <p>
+                            Action · Fantasy
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <!-- Neon Hearts -->
+
+                <article
+                    class="manga-card"
+                    onclick="openManga('Neon Hearts')">
+
+                    <div class="cover">
+
+                        <img
+                            src="images/neon-hearts.JPG"
+                            alt="Neon Hearts manga cover">
+
+                    </div>
+
+                    <div class="card-content">
+
+                        <h3>
+                            Neon Hearts
+                        </h3>
+
+                        <p>
+                            Romance · Drama
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <!-- Crimson Blade -->
+
+                <article
+                    class="manga-card"
+                    onclick="openManga('Crimson Blade')">
+
+                    <div class="cover">
+
+                        <img
+                            src="images/crimson-blade.JPG"
+                            alt="Crimson Blade manga cover">
+
+                    </div>
+
+                    <div class="card-content">
+
+                        <h3>
+                            Crimson Blade
+                        </h3>
+
+                        <p>
+                            Action · Adventure
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <!-- Beyond Tomorrow -->
+
+                <article
+                    class="manga-card"
+                    onclick="openManga('Beyond Tomorrow')">
+
+                    <div class="cover">
+
+                        <img
+                            src="images/beyond-tomorrow.JPG"
+                            alt="Beyond Tomorrow manga cover">
+
+                    </div>
+
+                    <div class="card-content">
+
+                        <h3>
+                            Beyond Tomorrow
+                        </h3>
+
+                        <p>
+                            Slice of Life · Drama
+                        </p>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         LIBRARY PAGE
+    ========================== -->
+
+    <main id="libraryPage" class="page">
+
+        <section class="section">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <p class="section-label">
+                        ✦ BROWSE
+                    </p>
+
+                    <h2>
+                        Manga Library
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="search-wrapper">
+
+                <span class="search-icon">
+                    🔍
+                </span>
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search manga..."
+                    oninput="searchManga()">
+
+            </div>
+
+
+            <div
+                id="libraryGrid"
+                class="manga-grid">
+
+
+                <!-- Shadow Eclipse -->
+
+                <article
+                    class="manga-card"
+                    data-title="Shadow Eclipse"
+                    onclick="openManga('Shadow Eclipse')">
+
+                    <div class="cover">
+
+                        <img
+                            src="images/shadow-eclipse.JPG"
+                            alt="Shadow Eclipse manga cover">
+
+                    </div>
+
+                    <div class="card-content">
+
+                        <h3>
+                            Shadow Eclipse
+                        </h3>
+
+                        <p>
+                            Action · Fantasy
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <!-- Neon Hearts -->
+
+                <article
+                    class="manga-card"
+                    data-title="Neon Hearts"
+                    onclick="openManga('Neon Hearts')">
+
+                    <div class="cover">
+
+                        <img
+                            src="images/neon-hearts.JPG"
+                            alt="Neon Hearts manga cover">
+
+                    </div>
+
+                    <div class="card-content">
+
+                        <h3>
+                            Neon Hearts
+                        </h3>
+
+                        <p>
+                            Romance · Drama
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <!-- Crimson Blade -->
+
+                <article
+                    class="manga-card"
+                    data-title="Crimson Blade"
+                    onclick="openManga('Crimson Blade')">
+
+                    <div class="cover">
+
+                        <img
+                            src="images/crimson-blade.JPG"
+                            alt="Crimson Blade manga cover">
+
+                    </div>
+
+                    <div class="card-content">
+
+                        <h3>
+                            Crimson Blade
+                        </h3>
+
+                        <p>
+                            Action · Adventure
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <!-- Beyond Tomorrow -->
+
+                <article
+                    class="manga-card"
+                    data-title="Beyond Tomorrow"
+                    onclick="openManga('Beyond Tomorrow')">
+
+                    <div class="cover">
+
+                        <img
+                            src="images/beyond-tomorrow.JPG"
+                            alt="Beyond Tomorrow manga cover">
+
+                    </div>
+
+                    <div class="card-content">
+
+                        <h3>
+                            Beyond Tomorrow
+                        </h3>
+
+                        <p>
+                            Slice of Life · Drama
+                        </p>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         MANGA DETAIL PAGE
+    ========================== -->
+
+    <main id="detailPage" class="page">
+
+        <section class="detail-section">
+
+            <button
+                type="button"
+                class="back-btn"
+                onclick="showPage('library')">
+                ← Back to Library
+            </button>
+
+
+            <div class="detail-layout">
+
+
+                <div class="detail-cover">
+
+                    <img
+                        id="detailCoverImage"
+                        src="images/shadow-eclipse.JPG"
+                        alt="Shadow Eclipse manga cover">
+
+                </div>
+
+
+                <div class="detail-info">
+
+                    <p
+                        id="detailGenre"
+                        class="detail-genre">
+                        Action · Fantasy
+                    </p>
+
+
+                    <h1 id="detailTitle">
+                        Shadow Eclipse
+                    </h1>
+
+
+                    <p
+                        id="detailDescription"
+                        class="detail-description">
+                        A mysterious story about a young hero who discovers a hidden power connected to the shadows.
+                    </p>
+
+
+                    <div class="status-box">
+
+                        <span class="status-label">
+                            Status
+                        </span>
+
+                        <span
+                            id="detailStatus"
+                            class="status-value">
+                            Ongoing
+                        </span>
+
+                    </div>
+
+
+                    <div class="chapter-section">
+
+                        <h2>
+                            Chapters
+                        </h2>
+
+
+                        <div class="chapter-list">
+
+
+                            <button
+                                type="button"
+                                class="chapter-btn"
+                                onclick="openReader(1)">
+
+                                <span>
+                                    Chapter 1
+                                </span>
+
+                                <span>
+                                    Read →
+                                </span>
+
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="chapter-btn"
+                                onclick="openReader(2)">
+
+                                <span>
+                                    Chapter 2
+                                </span>
+
+                                <span>
+                                    Read →
+                                </span>
+
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="chapter-btn"
+                                onclick="openReader(3)">
+
+                                <span>
+                                    Chapter 3
+                                </span>
+
+                                <span>
+                                    Read →
+                                </span>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         READER PAGE
+    ========================== -->
+
+    <main id="readerPage" class="page">
+
+        <section class="reader-section">
+
+            <div class="reader-top">
+
+                <button
+                    type="button"
+                    class="back-btn"
+                    onclick="showPage('detail')">
+                    ← Back
+                </button>
+
+                <h1 id="readerTitle">
+                    Shadow Eclipse — Chapter 1
+                </h1>
+
+            </div>
+
+
+            <div class="reader-content">
+
+                <div class="manga-panel">
+                    <div class="panel-placeholder">
+                        Manga Panel 1
+                    </div>
+                </div>
+
+                <div class="manga-panel">
+                    <div class="panel-placeholder">
+                        Manga Panel 2
+                    </div>
+                </div>
+
+                <div class="manga-panel">
+                    <div class="panel-placeholder">
+                        Manga Panel 3
+                    </div>
+                </div>
+
+                <div class="manga-panel">
+                    <div class="panel-placeholder">
+                        Manga Panel 4
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="reader-controls">
+
+                <button
+                    type="button"
+                    class="secondary-btn"
+                    onclick="previousChapter()">
+                    ← Previous
+                </button>
+
+                <button
+                    type="button"
+                    class="primary-btn"
+                    onclick="nextChapter()">
+                    Next →
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         BUNNY
+    ========================== -->
+
+    <div class="bunny-mascot">
+
+        <img
+            src="images/bunny.png"
+            alt="">
+
     </div>
-</section>
-</main>
-<!-- ==================== READER PAGE ==================== -->
-<main id="readerPage" class="page">
-<section class="reader-section">
-    <div class="reader-top">
-        <button
-            class="back-btn"
-            onclick="showPage('detail')"
-        >
-            ← Back
-        </button>
-        <h1 id="readerTitle">
-            Shadow Eclipse — Chapter 1
-        </h1>
-    </div>
-    <div class="reader-content">
-        <div class="manga-panel">
-            <div class="panel-placeholder">
-                Manga Panel 1
-            </div>
-        </div>
-        <div class="manga-panel">
-            <div class="panel-placeholder">
-                Manga Panel 2
-            </div>
-        </div>
-        <div class="manga-panel">
-            <div class="panel-placeholder">
-                Manga Panel 3
-            </div>
-        </div>
-        <div class="manga-panel">
-            <div class="panel-placeholder">
-                Manga Panel 4
-            </div>
-        </div>
-    </div>
-    <div class="reader-controls">
-        <button
-            class="secondary-btn"
-            onclick="previousChapter()"
-        >
-            ← Previous
-        </button>
-        <button
-            class="primary-btn"
-            onclick="nextChapter()"
-        >
-            Next →
-        </button>
-    </div>
-</section>
-</main>
-<!-- ==================== BUNNY ==================== -->
-<div class="bunny-mascot">
-<img
-    src="images/bunny.png"
-    alt=""
->
-</div>
-<!-- ==================== FOOTER ==================== -->
-<footer class="footer">
-<p>
-    © 2026 MangaVerse · Made with ♡
-</p>
-</footer>
-<script src="script.js?v=2"></script>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer class="footer">
+
+        <p>
+            © 2026 MangaVerse · Made with ♡
+        </p>
+
+    </footer>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+
+    <script src="script.js?v=3"></script>
+
 </body>
 </html>
