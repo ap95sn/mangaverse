@@ -32,20 +32,24 @@ const mangaData = {
     }
 };
 
+
 let currentManga = "Shadow Eclipse";
 let currentChapter = 1;
 
 
-/* ==================== PAGE NAVIGATION ==================== */
+/* =========================
+   PAGE NAVIGATION
+========================= */
 
 function showPage(pageName) {
     const pages = document.querySelectorAll(".page");
 
-    pages.forEach((page) => {
+    pages.forEach(function (page) {
         page.classList.remove("active");
     });
 
-    const targetPage = document.getElementById(pageName + "Page");
+    const targetPage =
+        document.getElementById(pageName + "Page");
 
     if (targetPage) {
         targetPage.classList.add("active");
@@ -58,7 +62,9 @@ function showPage(pageName) {
 }
 
 
-/* ==================== LOGIN SYSTEM ==================== */
+/* =========================
+   LOGIN
+========================= */
 
 const demoUser = {
     username: "admin",
@@ -79,17 +85,23 @@ function loginUser(event) {
         document.getElementById("loginMessage");
 
     if (!usernameInput || !passwordInput) {
-        return;
+        return false;
     }
 
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value;
+    const username =
+        usernameInput.value.trim();
+
+    const password =
+        passwordInput.value;
 
     if (
         username === demoUser.username &&
         password === demoUser.password
     ) {
-        sessionStorage.setItem("loggedIn", "true");
+        sessionStorage.setItem(
+            "loggedIn",
+            "true"
+        );
 
         if (loginMessage) {
             loginMessage.textContent = "";
@@ -105,41 +117,27 @@ function loginUser(event) {
                 "Invalid username or password.";
         }
     }
+
+    return false;
 }
 
+
+/* =========================
+   LOGOUT
+========================= */
 
 function logoutUser() {
     sessionStorage.removeItem("loggedIn");
 
-    currentManga = "Shadow Eclipse";
-    currentChapter = 1;
-
-    const usernameInput =
-        document.getElementById("usernameInput");
-
-    const passwordInput =
-        document.getElementById("passwordInput");
-
-    const loginMessage =
-        document.getElementById("loginMessage");
-
-    if (usernameInput) {
-        usernameInput.value = "";
-    }
-
-    if (passwordInput) {
-        passwordInput.value = "";
-    }
-
-    if (loginMessage) {
-        loginMessage.textContent = "";
-    }
-
     showPage("login");
+
+    return false;
 }
 
 
-/* ==================== MANGA DETAIL ==================== */
+/* =========================
+   MANGA DETAIL
+========================= */
 
 function openManga(mangaName) {
     const manga = mangaData[mangaName];
@@ -151,26 +149,46 @@ function openManga(mangaName) {
     currentManga = mangaName;
     currentChapter = 1;
 
-    document.getElementById("detailTitle").textContent =
-        manga.title;
+    const detailTitle =
+        document.getElementById("detailTitle");
 
-    document.getElementById("detailGenre").textContent =
-        manga.genre;
+    const detailGenre =
+        document.getElementById("detailGenre");
 
-    document.getElementById("detailDescription").textContent =
-        manga.description;
+    const detailDescription =
+        document.getElementById("detailDescription");
 
-    document.getElementById("detailCoverImage").src =
-        manga.coverImage;
+    const detailCoverImage =
+        document.getElementById("detailCoverImage");
 
-    document.getElementById("detailCoverImage").alt =
-        manga.title + " manga cover";
+    if (detailTitle) {
+        detailTitle.textContent = manga.title;
+    }
+
+    if (detailGenre) {
+        detailGenre.textContent = manga.genre;
+    }
+
+    if (detailDescription) {
+        detailDescription.textContent =
+            manga.description;
+    }
+
+    if (detailCoverImage) {
+        detailCoverImage.src =
+            manga.coverImage;
+
+        detailCoverImage.alt =
+            manga.title + " manga cover";
+    }
 
     showPage("detail");
 }
 
 
-/* ==================== MANGA READER ==================== */
+/* =========================
+   MANGA READER
+========================= */
 
 function openReader(chapterNumber) {
     currentChapter = chapterNumber;
@@ -180,7 +198,9 @@ function openReader(chapterNumber) {
 
     if (readerTitle) {
         readerTitle.textContent =
-            currentManga + " — Chapter " + currentChapter;
+            currentManga +
+            " — Chapter " +
+            currentChapter;
     }
 
     showPage("reader");
@@ -196,7 +216,9 @@ function previousChapter() {
 
         if (readerTitle) {
             readerTitle.textContent =
-                currentManga + " — Chapter " + currentChapter;
+                currentManga +
+                " — Chapter " +
+                currentChapter;
         }
     }
 }
@@ -211,31 +233,41 @@ function nextChapter() {
 
         if (readerTitle) {
             readerTitle.textContent =
-                currentManga + " — Chapter " + currentChapter;
+                currentManga +
+                " — Chapter " +
+                currentChapter;
         }
     }
 }
 
 
-/* ==================== SEARCH ==================== */
+/* =========================
+   SEARCH
+========================= */
 
 function searchManga() {
     const searchInput =
         document.getElementById("searchInput");
 
-    if (!searchInput) {
+    const libraryGrid =
+        document.getElementById("libraryGrid");
+
+    if (!searchInput || !libraryGrid) {
         return;
     }
 
     const searchText =
-        searchInput.value.toLowerCase().trim();
+        searchInput.value
+            .toLowerCase()
+            .trim();
 
     const mangaCards =
-        document.querySelectorAll("#libraryGrid .manga-card");
+        libraryGrid.querySelectorAll(".manga-card");
 
-    mangaCards.forEach((card) => {
+    mangaCards.forEach(function (card) {
         const title =
-            card.dataset.title.toLowerCase();
+            (card.dataset.title || "")
+                .toLowerCase();
 
         if (title.includes(searchText)) {
             card.style.display = "";
@@ -246,31 +278,46 @@ function searchManga() {
 }
 
 
-/* ==================== DARK MODE ==================== */
+/* =========================
+   DARK MODE
+========================= */
 
 function toggleTheme() {
-    const html = document.documentElement;
+    const html =
+        document.documentElement;
 
     const currentTheme =
         html.getAttribute("data-theme");
 
     if (currentTheme === "dark") {
-        html.setAttribute("data-theme", "light");
+        html.setAttribute(
+            "data-theme",
+            "light"
+        );
     } else {
-        html.setAttribute("data-theme", "dark");
+        html.setAttribute(
+            "data-theme",
+            "dark"
+        );
     }
 }
 
 
-/* ==================== INITIAL PAGE ==================== */
+/* =========================
+   PAGE START
+========================= */
 
-document.addEventListener("DOMContentLoaded", () => {
-    const loggedIn =
-        sessionStorage.getItem("loggedIn");
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-    if (loggedIn === "true") {
-        showPage("home");
-    } else {
-        showPage("login");
+        const loggedIn =
+            sessionStorage.getItem("loggedIn");
+
+        if (loggedIn === "true") {
+            showPage("home");
+        } else {
+            showPage("login");
+        }
     }
-});
+);
