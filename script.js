@@ -1,449 +1,203 @@
-// ========================================
-// MangaVerse - JavaScript
-// ========================================
-
 const mangaData = {
-    "Shadow Eclipse": {
-        title: "Shadow Eclipse",
-        genre: "Action · Fantasy",
-        description:
-            "A mysterious story about a young hero who discovers a hidden power connected to the shadows.",
-        coverImage: "images/shadow-eclipse.JPG"
-    },
+“Shadow Eclipse”: {
+title: “Shadow Eclipse”,
+genre: “Action · Fantasy”,
+description:
+“A mysterious story about a young hero who discovers a hidden power connected to the shadows.”,
+coverImage: “images/shadow-eclipse.JPG”
+},
 
-    "Neon Hearts": {
-        title: "Neon Hearts",
-        genre: "Romance · Drama",
-        description:
-            "In a city filled with neon lights, two young people slowly discover that love can appear in the most unexpected places.",
-        coverImage: "images/neon-hearts.JPG"
-    },
+"Neon Hearts": {
+    title: "Neon Hearts",
+    genre: "Romance · Drama",
+    description:
+        "In a city filled with neon lights, two young people slowly discover that love can appear in the most unexpected places.",
+    coverImage: "images/neon-hearts.JPG"
+},
+"Crimson Blade": {
+    title: "Crimson Blade",
+    genre: "Action · Adventure",
+    description:
+        "A wandering swordsman carries a legendary crimson blade and searches for the truth behind a forgotten war.",
+    coverImage: "images/crimson-blade.JPG"
+},
+"Beyond Tomorrow": {
+    title: "Beyond Tomorrow",
+    genre: "Slice of Life · Drama",
+    description:
+        "A quiet story about friendship, dreams, growing up, and finding the courage to take the next step.",
+    coverImage: "images/beyond-tomorrow.JPG"
+}
 
-    "Crimson Blade": {
-        title: "Crimson Blade",
-        genre: "Action · Adventure",
-        description:
-            "A wandering swordsman carries a legendary crimson blade and searches for the truth behind a forgotten war.",
-        coverImage: "images/crimson-blade.JPG"
-    },
-
-    "Beyond Tomorrow": {
-        title: "Beyond Tomorrow",
-        genre: "Slice of Life · Drama",
-        description:
-            "A quiet story about friendship, dreams, growing up, and finding the courage to take the next step.",
-        coverImage: "images/beyond-tomorrow.JPG"
-    }
 };
 
-
-// ========================================
-// Current State
-// ========================================
-
-let currentManga = "Shadow Eclipse";
+let currentManga = “Shadow Eclipse”;
 let currentChapter = 1;
 
-
-// ========================================
-// Page Navigation
-// ========================================
+/* ==================== PAGE NAVIGATION ==================== */
 
 function showPage(pageName) {
+const pages = document.querySelectorAll(”.page”);
 
-    const pages = document.querySelectorAll(".page");
-
-    pages.forEach(function(page) {
-        page.classList.add("hidden");
-        page.classList.remove("active");
-    });
-
-    const targetPage =
-        document.getElementById(pageName + "Page");
-
-    if (!targetPage) {
-        console.error(
-            "Page not found:",
-            pageName + "Page"
-        );
-        return;
-    }
-
-    targetPage.classList.remove("hidden");
+pages.forEach((page) => {
+    page.classList.remove("active");
+});
+const targetPage = document.getElementById(pageName + "Page");
+if (targetPage) {
     targetPage.classList.add("active");
-
     window.scrollTo({
         top: 0,
         behavior: "smooth"
     });
 }
 
+}
 
-// ========================================
-// Open Manga Detail
-// ========================================
+/* ==================== LOGIN SYSTEM ==================== */
+
+const demoUser = {
+username: “admin”,
+password: “1234”
+};
+
+function loginUser(event) {
+event.preventDefault();
+
+const usernameInput =
+    document.getElementById("usernameInput");
+const passwordInput =
+    document.getElementById("passwordInput");
+const loginMessage =
+    document.getElementById("loginMessage");
+const username = usernameInput.value.trim();
+const password = passwordInput.value;
+if (
+    username === demoUser.username &&
+    password === demoUser.password
+) {
+    sessionStorage.setItem("loggedIn", "true");
+    loginMessage.textContent = "";
+    usernameInput.value = "";
+    passwordInput.value = "";
+    showPage("home");
+} else {
+    loginMessage.textContent =
+        "Invalid username or password.";
+}
+
+}
+
+function logoutUser() {
+sessionStorage.removeItem(“loggedIn”);
+
+showPage("login");
+
+}
+
+/* ==================== MANGA DETAIL ==================== */
 
 function openManga(mangaName) {
+const manga = mangaData[mangaName];
 
-    const manga = mangaData[mangaName];
+if (!manga) {
+    return;
+}
+currentManga = mangaName;
+currentChapter = 1;
+document.getElementById("detailTitle").textContent =
+    manga.title;
+document.getElementById("detailGenre").textContent =
+    manga.genre;
+document.getElementById("detailDescription").textContent =
+    manga.description;
+document.getElementById("detailCoverImage").src =
+    manga.coverImage;
+document.getElementById("detailCoverImage").alt =
+    manga.title + " manga cover";
+showPage("detail");
 
-    if (!manga) {
-        console.error(
-            "Manga not found:",
-            mangaName
-        );
-        return;
-    }
-
-    currentManga = mangaName;
-    currentChapter = 1;
-
-
-    // Update title
-    const title =
-        document.getElementById("detailTitle");
-
-    if (title) {
-        title.textContent = manga.title;
-    }
-
-
-    // Update genre
-    const genre =
-        document.getElementById("detailGenre");
-
-    if (genre) {
-        genre.textContent = manga.genre;
-    }
-
-
-    // Update description
-    const description =
-        document.getElementById("detailDescription");
-
-    if (description) {
-        description.textContent =
-            manga.description;
-    }
-
-
-    // Update manga cover image
-    const coverImage =
-        document.getElementById(
-            "detailCoverImage"
-        );
-
-    if (coverImage) {
-        coverImage.src = manga.coverImage;
-        coverImage.alt =
-            manga.title + " manga cover";
-    }
-
-
-    // Open detail page
-    showPage("detail");
 }
 
-
-// ========================================
-// Open Reader
-// ========================================
+/* ==================== MANGA READER ==================== */
 
 function openReader(chapterNumber) {
+currentChapter = chapterNumber;
 
-    currentChapter = chapterNumber;
+const readerTitle =
+    document.getElementById("readerTitle");
+readerTitle.textContent =
+    currentManga + " — Chapter " + currentChapter;
+showPage("reader");
 
-    const manga =
-        mangaData[currentManga];
-
-    if (!manga) {
-        console.error(
-            "Current manga not found."
-        );
-        return;
-    }
-
-    const readerTitle =
-        document.getElementById(
-            "readerTitle"
-        );
-
-    if (readerTitle) {
-        readerTitle.textContent =
-            manga.title +
-            " — Chapter " +
-            currentChapter;
-    }
-
-    showPage("reader");
 }
-
-
-// ========================================
-// Previous Chapter
-// ========================================
 
 function previousChapter() {
+if (currentChapter > 1) {
+currentChapter–;
 
-    if (currentChapter > 1) {
-
-        currentChapter--;
-
-        const manga =
-            mangaData[currentManga];
-
-        const readerTitle =
-            document.getElementById(
-                "readerTitle"
-            );
-
-        if (readerTitle && manga) {
-            readerTitle.textContent =
-                manga.title +
-                " — Chapter " +
-                currentChapter;
-        }
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-
-    } else {
-
-        alert(
-            "You are already reading Chapter 1."
-        );
-    }
+    document.getElementById("readerTitle").textContent =
+        currentManga + " — Chapter " + currentChapter;
 }
 
-
-// ========================================
-// Next Chapter
-// ========================================
+}
 
 function nextChapter() {
+if (currentChapter < 3) {
+currentChapter++;
 
-    if (currentChapter < 3) {
-
-        currentChapter++;
-
-        const manga =
-            mangaData[currentManga];
-
-        const readerTitle =
-            document.getElementById(
-                "readerTitle"
-            );
-
-        if (readerTitle && manga) {
-            readerTitle.textContent =
-                manga.title +
-                " — Chapter " +
-                currentChapter;
-        }
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-
-    } else {
-
-        alert(
-            "You have reached the latest chapter."
-        );
-    }
+    document.getElementById("readerTitle").textContent =
+        currentManga + " — Chapter " + currentChapter;
 }
 
+}
 
-// ========================================
-// Search Manga
-// ========================================
+/* ==================== SEARCH ==================== */
 
 function searchManga() {
+const searchInput =
+document.getElementById(“searchInput”);
 
-    const input =
-        document.getElementById(
-            "searchInput"
-        );
-
-    if (!input) {
-        return;
+const searchText =
+    searchInput.value.toLowerCase().trim();
+const mangaCards =
+    document.querySelectorAll("#libraryGrid .manga-card");
+mangaCards.forEach((card) => {
+    const title =
+        card.dataset.title.toLowerCase();
+    if (title.includes(searchText)) {
+        card.style.display = "";
+    } else {
+        card.style.display = "none";
     }
+});
 
-    const searchText =
-        input.value
-            .toLowerCase()
-            .trim();
-
-    const cards =
-        document.querySelectorAll(
-            "#libraryGrid .manga-card"
-        );
-
-    cards.forEach(function(card) {
-
-        const title =
-            card.getAttribute(
-                "data-title"
-            );
-
-        if (!title) {
-            return;
-        }
-
-        if (
-            title
-                .toLowerCase()
-                .includes(searchText)
-        ) {
-            card.style.display = "";
-        } else {
-            card.style.display = "none";
-        }
-
-    });
 }
 
-
-// ========================================
-// Dark / Light Theme
-// ========================================
+/* ==================== DARK MODE ==================== */
 
 function toggleTheme() {
+const html = document.documentElement;
 
-    const root =
-        document.documentElement;
-
-    const currentTheme =
-        root.getAttribute(
-            "data-theme"
-        ) || "dark";
-
-
-    if (currentTheme === "dark") {
-
-        root.setAttribute(
-            "data-theme",
-            "light"
-        );
-
-        root.style.setProperty(
-            "--bg",
-            "#f5f5f7"
-        );
-
-        root.style.setProperty(
-            "--surface",
-            "#ffffff"
-        );
-
-        root.style.setProperty(
-            "--card",
-            "#ffffff"
-        );
-
-        root.style.setProperty(
-            "--card-hover",
-            "#f0f0f2"
-        );
-
-        root.style.setProperty(
-            "--text",
-            "#171717"
-        );
-
-        root.style.setProperty(
-            "--muted",
-            "#666666"
-        );
-
-        root.style.setProperty(
-            "--border",
-            "#dddddd"
-        );
-
-        root.style.setProperty(
-            "--shadow",
-            "0 8px 25px rgba(0,0,0,0.08)"
-        );
-
-        const button =
-            document.querySelector(
-                ".theme-btn"
-            );
-
-        if (button) {
-            button.textContent = "☀";
-        }
-
-    } else {
-
-        root.setAttribute(
-            "data-theme",
-            "dark"
-        );
-
-        root.style.setProperty(
-            "--bg",
-            "#0f0f12"
-        );
-
-        root.style.setProperty(
-            "--surface",
-            "#17171c"
-        );
-
-        root.style.setProperty(
-            "--card",
-            "#1d1d24"
-        );
-
-        root.style.setProperty(
-            "--card-hover",
-            "#25252e"
-        );
-
-        root.style.setProperty(
-            "--text",
-            "#f5f5f5"
-        );
-
-        root.style.setProperty(
-            "--muted",
-            "#a0a0aa"
-        );
-
-        root.style.setProperty(
-            "--border",
-            "#303039"
-        );
-
-        root.style.setProperty(
-            "--shadow",
-            "0 8px 25px rgba(0,0,0,0.25)"
-        );
-
-        const button =
-            document.querySelector(
-                ".theme-btn"
-            );
-
-        if (button) {
-            button.textContent = "☾";
-        }
-    }
+const currentTheme =
+    html.getAttribute("data-theme");
+if (currentTheme === "dark") {
+    html.setAttribute("data-theme", "light");
+} else {
+    html.setAttribute("data-theme", "dark");
 }
 
+}
 
-// ========================================
-// Start Website
-// ========================================
+/* ==================== INITIAL PAGE ==================== */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-        showPage("home");
-    }
-);
+document.addEventListener(“DOMContentLoaded”, () => {
+const loggedIn =
+sessionStorage.getItem(“loggedIn”);
+
+if (loggedIn === "true") {
+    showPage("home");
+} else {
+    showPage("login");
+}
+
+});
